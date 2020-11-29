@@ -1,26 +1,34 @@
 import React from "react";
 import { Logo } from "../components";
-import FacebookLogin from "react-facebook-login";
+import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { useHistory } from "react-router-dom";
+import { loginUser } from "../services/auth";
 
 export function LoginPage () {
-
     const history = useHistory();
 
-    const routeChange = () =>{ 
-        history.push("/home");
-    }
+    const responseFacebook = (response: ReactFacebookLoginInfo) => {
+        if (response.accessToken) {
+          loginUser(response.accessToken)
+            .then(() => {
+                history.push("/home");
+            })
+            .catch(() => {
+              alert('Login error');
+            });
+        }
+      };
+    
 
     return (
         <div className="loginWrapper">
             <Logo />
             <div className="fbLogin">           
                 <FacebookLogin
-                    appId="3030721947029486"
-                    autoLoad={true}
+                    appId="786579368566156"
+                    autoLoad={false}
                     fields="name,email,picture"
-                    onClick={routeChange}
-                    callback={() => {}}
+                    callback={responseFacebook}
                 />
             </div>
 

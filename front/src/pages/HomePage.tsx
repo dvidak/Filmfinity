@@ -8,8 +8,8 @@ export function HomePage() {
     const [loveMovies, setLoveMovies] = useState([] as any);
     const [christmasMovies, setChristmasMovies] = useState([] as any);
 
-    const fetchURL = "http://www.omdbapi.com/?apikey=7d18ac08&type=movie&s=love";
-    const fetchURL2 = "http://www.omdbapi.com/?apikey=7d18ac08&type=movie&s=christmas";
+    const fetchURL = "https://www.omdbapi.com/?apikey=7d18ac08&type=movie&s=love";
+    const fetchURL2 = "https://www.omdbapi.com/?apikey=7d18ac08&type=movie&s=christmas";
 
     useEffect(() => {
         fetch(fetchURL)
