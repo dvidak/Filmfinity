@@ -1,0 +1,16 @@
+export const fbMovieCategories = [
+  'Episode',
+  'Film',
+  'Movie',
+  'Movie Character',
+  'Movie Genre',
+  'One-Time TV Program',
+  'TV',
+  'TV Channel',
+  'TV Genre',
+  'TV Network',
+  'TV Season',
+  'TV Show',
+  'TV/Movie Award',
+  'Video',
+];

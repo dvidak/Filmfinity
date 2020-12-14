@@ -1,18 +1,18 @@
-import { Router } from 'express'
-import AuthController from '../controller/Auth.contoller'
-import FacebookMiddleware from '../middlewares/facebook.middleware'
+import { Router } from 'express';
+import AuthController from '../controller/Auth.contoller';
+import FacebookMiddleware from '../middlewares/facebook.middleware';
 
 class AuthRouter {
-  private _router = Router()
-  private controller = AuthController
-  private facebookMiddleware = FacebookMiddleware
+  private _router = Router();
+  private controller = AuthController;
+  private facebookMiddleware = FacebookMiddleware;
 
   get router() {
-    return this._router
+    return this._router;
   }
 
   constructor() {
-    this.configure()
+    this.configure();
   }
 
   private configure() {
@@ -20,8 +20,8 @@ class AuthRouter {
       '/login',
       this.facebookMiddleware.auth,
       this.controller.login
-    )
+    );
   }
 }
 
-export = new AuthRouter().router
+export = new AuthRouter().router;
