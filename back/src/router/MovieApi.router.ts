@@ -1,21 +1,22 @@
-import { Router } from 'express';
-import MovieApiController from '../controller/MovieApi.controller';
+import { Router } from 'express'
+import MovieApiController from '../controller/MovieApi.controller'
 
 class MovieApiRouter {
-  private _router = Router();
-  private controller = MovieApiController;
+  private _router = Router()
+  private controller = MovieApiController
 
   get router() {
-    return this._router;
+    return this._router
   }
 
   constructor() {
-    this.configure();
+    this.configure()
   }
 
   private configure() {
-    this._router.get('/', this.controller.load);
+    this._router.get('/trending', this.controller.fetchTmdbTrendingMovies)
+    this._router.get('/popular', this.controller.fetchTmdbPopularMovies)
   }
 }
 
-export = new MovieApiRouter().router;
+export = new MovieApiRouter().router
