@@ -14,8 +14,10 @@ class MovieApiRouter {
   }
 
   private configure() {
-    this._router.get('/trending', this.controller.fetchTmdbTrendingMovies)
-    this._router.get('/popular', this.controller.fetchTmdbPopularMovies)
+    this._router.get('/popular', this.controller.fetchTraktPopularMovies)
+    this._router.get('/trending', this.controller.fetchTraktTrendingMovies)
+    this._router.get('/tmdb/trending', this.controller.fetchTmdbTrendingMovies)
+    this._router.get('tmdb/popular', this.controller.fetchTmdbPopularMovies)
   }
 }
 
