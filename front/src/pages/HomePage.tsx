@@ -1,80 +1,27 @@
-import React, { useEffect, useState } from 'react';
-import { Header, Navbar } from '../components';
-import addToWatchImg from "../img/addToWatch.png";
-import addToWatchedImg from "../img/addToWatched.png";
+import React, { useEffect, useState } from "react";
+import { Header, Navbar } from "../components";
+import { Movies } from "../components/Movies";
+import { getPopularMovies, getTrendingMovies } from "../services/movie";
 
 export function HomePage() {
+  const [popularMovies, setPopularMoivies] = useState([]);
+  const [trendingMovies, setTrendingMovies] = useState([]);
 
-    const [loveMovies, setLoveMovies] = useState([] as any);
-    const [christmasMovies, setChristmasMovies] = useState([] as any);
+  useEffect(() => {
+    getTrendingMovies().then((movies) => setTrendingMovies(movies));
+    getPopularMovies().then((movies) => setPopularMoivies(movies));
+  }, []);
 
-    const fetchURL = "https://www.omdbapi.com/?apikey=7d18ac08&type=movie&s=love";
-    const fetchURL2 = "https://www.omdbapi.com/?apikey=7d18ac08&type=movie&s=christmas";
-
-    useEffect(() => {
-        fetch(fetchURL)
-        .then((res) => res.json())
-        .then(data => setLoveMovies(data.Search as any));
-
-        fetch(fetchURL2)
-        .then((res) => res.json())
-        .then(data => setChristmasMovies(data.Search as any));
-    }, [] );
-
-    useEffect(() => {
-        console.log("MOVIES ", loveMovies);
-    }, [loveMovies]);
-
-    return (
-        <div className="homeWrapper">
-            <Header />
-            <div className="moviesWrapper">
-                <Navbar />
-                <div className="movieList"> 
-                    <h2 className="listName">Recommended</h2>
-                    <div className="movies">
-                        {loveMovies.length > 0 && loveMovies.map((movie: any) => 
-                            {return (
-                                <div className="imgContainer">
-                                    <img src={movie.Poster} className="moviePoster" alt={movie.Title} key={movie.imdbID}/>
-                                    <div className="movieDetails">
-                                        <h4 className="title">{movie.Title}</h4>
-                                        <div className="addButtons">
-                                            <button className="addBtn">
-                                                <img className="iconWatch" src={addToWatchImg} />
-                                            </button>
-                                            <button className="addBtn">
-                                                <img className="iconLike" src={addToWatchedImg} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        )}
-                    </div>
-                    <h2 className="listName">Christmas movies</h2>
-                    <div className="movies">
-                        {christmasMovies.length > 0 && christmasMovies.map((movie: any) => 
-                            {return (
-                                <div className="imgContainer">
-                                    <img src={movie.Poster} className="moviePoster" alt={movie.Title} key={movie.imdbID}/>
-                                    <div className="movieDetails">
-                                        <h4 className="title">{movie.Title}</h4>
-                                        <div className="addButtons">
-                                            <button className="addBtn">
-                                                <img className="iconWatch" src={addToWatchImg} />
-                                            </button>
-                                            <button className="addBtn">
-                                                <img className="iconLike" src={addToWatchedImg} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        )}
-                    </div>
-                </div>
-            </div>
+  return (
+    <div className="homeWrapper">
+      <Header />
+      <div className="moviesWrapper">
+        <Navbar />
+        <div className="movieList">
+          <Movies title="Trending movies" movies={trendingMovies} />
+          <Movies title="Popular movies" movies={popularMovies} />
         </div>
-    );
+      </div>
+    </div>
+  );
 }

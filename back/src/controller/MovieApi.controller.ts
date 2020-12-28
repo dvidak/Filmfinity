@@ -16,7 +16,6 @@ class MovieApiController {
   }
 
   public async fetchTraktPopularMovies(_: Request, res: Response) {
-    console.log('trakt popular')
     const traktMovies = await this.traktMovies(MovieType.POPULAR)
     const movies = []
     for (const traktMovie of traktMovies) {
@@ -29,7 +28,6 @@ class MovieApiController {
   }
 
   public async fetchTraktTrendingMovies(_: Request, res: Response) {
-    console.log('trakt trending')
     const traktMovies = await this.traktMovies(MovieType.TRENDING)
     const movies = []
     for (const traktMovie of traktMovies) {
@@ -41,8 +39,8 @@ class MovieApiController {
     res.status(200).json(movies)
   }
 
+  //TMDB trending and popular is not used
   public async fetchTmdbTrendingMovies(_: Request, res: Response) {
-    console.log('tmdb trending')
     const tmdbMovies = await Axios.get(
       `https://api.themoviedb.org/3/trending/movie/week?api_key=${AppConfig.TMDB.API_KEY}`
     )
@@ -50,7 +48,6 @@ class MovieApiController {
   }
 
   public async fetchTmdbPopularMovies(_: Request, res: Response) {
-    console.log('tmdb popular')
     const tmdbMovies = await Axios.get(
       `https://api.themoviedb.org/3/movie/popular?api_key=${AppConfig.TMDB.API_KEY}&language=en-US`
     )
