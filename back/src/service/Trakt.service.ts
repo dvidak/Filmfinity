@@ -11,7 +11,7 @@ class TraktService {
       client_id: AppConfig.TRAKT.CLIENT_ID,
       client_secret: AppConfig.TRAKT.CLIENT_SECRET,
     },
-    true
+    false
   );
 
   // id can be Trakt ID, Trakt slug, or IMDB ID
@@ -28,6 +28,15 @@ class TraktService {
     return await this.trakt.search.text({
       type: 'movie',
       query: title,
+    });
+  }
+
+  /**
+   * Method returns top 10 related movies
+   */
+  public async getRelatedTraktMovies(traktId: string) {
+    return await this.trakt.movies.related({
+      id: traktId,
     });
   }
 

@@ -1,6 +1,7 @@
 import Axios from 'axios';
 import { fbMovieCategories } from '../consts/fbMovieCategories';
 import FbLikedMovie, { FbLikedMovieInterface } from '../model/FbLikedMovie';
+import { MovieInterface } from '../model/Movie';
 import User from '../model/User';
 import { FbLike } from '../types/FbLike.type';
 import MapperService from './Mapper.service';
@@ -25,17 +26,10 @@ class FacebookService {
     const newFbMovies = await this.getFacebookMovies(fbAccessToken);
     const savedUser = await User.findOne({ facebookId: facebookUserId });
 
-    // console.log('ALL EXTRACTED FB MOVIES', newFbMovies);
-
     // User does not exist
     if (!savedUser) return false;
-    let requiresUpdate = false;
 
-    if (savedUser.fbLikedMovies) {
-      const demoLikedMovie = savedUser.fbLikedMovies[0];
-      const mapped = await this.mapperService.mapFbLikedMovie(demoLikedMovie);
-      console.log('MAPPED', mapped);
-    }
+    let requiresUpdate = false;
 
     for (const newFbMovie of newFbMovies) {
       const foundIndex = savedUser.fbLikedMovies.findIndex((fbLikedMovie) => fbLikedMovie.facebookId === newFbMovie.id);
@@ -48,7 +42,9 @@ class FacebookService {
     if (requiresUpdate) {
       // User has new movie liked.
       const fbLikedMovies: FbLikedMovieInterface[] = [];
+      const mappedFbLikedMovies: MovieInterface[] = [];
       for (const newFbMovie of newFbMovies) {
+        // Save FB Liked movies in array
         const tempFbLikedMovie = new FbLikedMovie({
           facebookId: newFbMovie.id,
           genre: newFbMovie.genre,
@@ -58,8 +54,15 @@ class FacebookService {
           category: newFbMovie.category,
         });
         fbLikedMovies.push(tempFbLikedMovie);
+
+        // Save mapped FB Liked movies in array
+        const tempMappedFbLikedMovie = await this.mapperService.mapFbLikedMovie(tempFbLikedMovie);
+        mappedFbLikedMovies.push(tempMappedFbLikedMovie);
       }
-      await User.updateOne({ facebookId: facebookUserId }, { fbLikedMovies: fbLikedMovies });
+      await User.updateOne({ facebookId: facebookUserId }, { fbLikedMovies: fbLikedMovies, mappedFbLikedMovies });
+
+      // Map all Facebook movies and save them
+
       console.log(`[FacebookService] User (${facebookUserId}) liked movies updated.`);
       return true;
     } else {

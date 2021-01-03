@@ -11,7 +11,8 @@ export interface MovieInterface extends Document {
   homepage?: string;
   popularity?: number;
   poster?: string;
-  traktId: number;
+  traktId: string;
+  coeff: number;
 }
 
 const MovieSchema: Schema = new Schema({
@@ -25,7 +26,8 @@ const MovieSchema: Schema = new Schema({
   homepage: { type: String, required: false },
   popularity: { type: Number, required: false },
   poster: { type: String, required: false },
-  traktId: { type: Number, required: true },
+  traktId: { type: String, required: true },
+  coeff: { type: Number, required: false },
 });
 
 const Movie = mongoose.model<MovieInterface>('Movie', MovieSchema);

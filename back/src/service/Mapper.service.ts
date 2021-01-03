@@ -15,7 +15,6 @@ class MapperService {
    * Method maps Facebook liked movie to MovieInterface object.
    */
   async mapFbLikedMovie(fbLikedMovie: FbLikedMovieInterface) {
-    console.log('Mapping fb liked movie', fbLikedMovie);
     let found;
 
     const traktMovies = await this.traktService.searchTraktMovieByTitle(fbLikedMovie.name);
@@ -36,6 +35,11 @@ class MapperService {
     const mapped = await this.movieService.getMovieObject(traktId, tmdbId);
 
     return mapped;
+  }
+
+  async mapMovieByName(movieName: string) {
+    const traktMovies = await this.traktService.searchTraktMovieByTitle(movieName);
+    return traktMovies[0];
   }
 }
 

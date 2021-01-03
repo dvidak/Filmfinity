@@ -39,7 +39,7 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.movie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const movieObject = this.movieService.serializeMovieObject(traktMovie, tmdbMovie);
+      const movieObject = this.movieService.serializeMovieObject(traktMovie.movie, tmdbMovie); // * Ne radi bez .movie (?)
       movies.push(movieObject);
     }
     res.status(200).json(movies);

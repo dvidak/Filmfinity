@@ -11,13 +11,13 @@ class MovieService {
   }
 
   async getMovieObject(traktId: string, tmdbId: string) {
-    let traktMovie = {};
-    let tmdbMovie = {};
+    let traktMovie: any = {};
+    let tmdbMovie: any = {};
 
-    if (traktId) traktMovie = await this.traktService.searchTraktMovieById(traktId, 'trakt');
+    if (traktId) traktMovie = ((await this.traktService.searchTraktMovieById(traktId, 'trakt')) as any)[0];
     if (tmdbId) tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
 
-    return this.serializeMovieObject(traktMovie, tmdbMovie);
+    return this.serializeMovieObject(traktMovie.movie, tmdbMovie);
   }
 
   public serializeMovieObject(traktMovie: any, tmdbMovie: any) {
@@ -25,7 +25,7 @@ class MovieService {
     if (tmdbMovie) {
       movieObject = {
         released: tmdbMovie.release_date || traktMovie.released,
-        title: traktMovie.title || tmdbMovie.title,
+        title: tmdbMovie.title || traktMovie.title,
         originalTitle: tmdbMovie.original_title,
         overview: traktMovie.overview || tmdbMovie.overview,
         runtime: tmdbMovie.runtime,
@@ -34,6 +34,8 @@ class MovieService {
         homepage: traktMovie.homepage || tmdbMovie.homepage,
         popularity: tmdbMovie.popularity,
         poster: tmdbMovie.poster_path,
+        traktId: traktMovie.ids.trakt,
+        tmdb: tmdbMovie.id,
       };
     } else {
       movieObject = traktMovie;
