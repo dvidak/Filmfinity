@@ -4,12 +4,15 @@ import FbLikedMovie, { FbLikedMovieInterface } from '../model/FbLikedMovie';
 import User from '../model/User';
 import { FbLike } from '../types/FbLike.type';
 import MapperService from './Mapper.service';
+import MovieService from './Movie.service';
 
 class FacebookService {
   private mapperService: MapperService;
+  private movieService: MovieService;
 
   constructor() {
     this.mapperService = new MapperService();
+    this.movieService = new MovieService();
   }
 
   /**

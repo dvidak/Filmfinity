@@ -1,16 +1,19 @@
 import Axios from 'axios';
 import { Request, Response } from 'express';
 import { AppConfig } from '../config/config';
-import { getMovieObject } from '../service/movie.service';
+import MovieService from '../service/Movie.service';
 import TmdbService from '../service/Tmdb.service';
 import TraktService, { MovieType } from '../service/Trakt.service';
+
 class MovieApiController {
   private tmdbService: TmdbService;
   private traktService: TraktService;
+  private movieService: MovieService;
 
   constructor() {
     this.tmdbService = new TmdbService();
     this.traktService = new TraktService();
+    this.movieService = new MovieService();
     this.fetchTraktPopularMovies = this.fetchTraktPopularMovies.bind(this);
     this.fetchTraktTrendingMovies = this.fetchTraktTrendingMovies.bind(this);
     this.fetchById = this.fetchById.bind(this);
@@ -23,7 +26,7 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const movieObject = getMovieObject(traktMovie, tmdbMovie);
+      const movieObject = this.movieService.serializeMovieObject(traktMovie, tmdbMovie);
       movies.push(movieObject);
     }
 
@@ -36,7 +39,7 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.movie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const movieObject = getMovieObject(traktMovie, tmdbMovie);
+      const movieObject = this.movieService.serializeMovieObject(traktMovie, tmdbMovie);
       movies.push(movieObject);
     }
     res.status(200).json(movies);
