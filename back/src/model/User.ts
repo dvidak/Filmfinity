@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import FbMovie from './FbMovie';
+import FbLikedMovie, { FbLikedMovieInterface } from './FbLikedMovie';
 import Movie from './Movie';
 
 export interface UserInterface extends Document {
@@ -7,6 +7,7 @@ export interface UserInterface extends Document {
   firstName: string;
   lastName: string;
   email: string;
+  fbLikedMovies: FbLikedMovieInterface[];
 }
 
 const UserSchema: Schema = new Schema({
@@ -14,7 +15,7 @@ const UserSchema: Schema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
-  fbMovies: [FbMovie.schema],
+  fbLikedMovies: [FbLikedMovie.schema],
   watchlist: [Movie.schema],
   watchedList: [Movie.schema],
 });

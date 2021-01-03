@@ -1,13 +1,15 @@
 import { Request, Response } from 'express';
 import User from '../model/User';
-import { getFacebookMovies } from '../service/facebook.service';
+import FacebookService from '../service/Facebook.service';
 import UsersService from '../service/Users.service';
 
 class UsersController {
   private usersService: UsersService;
+  private facebookService: FacebookService;
 
   constructor() {
     this.usersService = new UsersService();
+    this.facebookService = new FacebookService();
     this.addToWatchlist = this.addToWatchlist.bind(this);
     this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
     this.addToWatchedList = this.addToWatchedList.bind(this);
@@ -29,8 +31,8 @@ class UsersController {
     const movieId = req.body.movieId;
     console.log(userId, movieId);
 
-   // const userId = "10219128442703578"
-   // const movieId = 'tron-legacy-2010'
+    // const userId = "10219128442703578"
+    // const movieId = 'tron-legacy-2010'
 
     const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
     res.status(201).json(addedMovie);
@@ -56,7 +58,7 @@ class UsersController {
 
   public async getUserMovies(req: Request, res: Response) {
     const fbToken = (req as any).accessToken(req as any).profile.id;
-    const movies = await getFacebookMovies(fbToken);
+    const movies = await this.facebookService.getFacebookMovies(fbToken);
     res.status(200).json({ movies });
   }
 }
