@@ -3,6 +3,7 @@ import * as React from "react";
 import addToWatchImg from "../img/addToWatch.png";
 import addToWatchedImg from "../img/addToWatched.png";
 import { Movie } from "../models/Movie";
+import { addToWatchlist } from "../services/movie";
 
 interface Props {
   title: string;
@@ -11,6 +12,12 @@ interface Props {
 
 export function Movies(props: Props) {
   const posterUrl = "https://image.tmdb.org/t/p/w185/";
+
+  const handleAddToWatchlist = (movieId: string) => {
+    const userId = localStorage.getItem('facebookId')
+    console.log("userId ", userId)
+    addToWatchlist(userId as string, movieId)
+  }
 
   return (
     <>
@@ -29,7 +36,7 @@ export function Movies(props: Props) {
                 <div className="movieDetails">
                   <h4 className="title">{movie.title}</h4>
                   <div className="addButtons">
-                    <button className="addBtn">
+                    <button className="addBtn" onClick={() => handleAddToWatchlist("tron-legacy-2010")}>
                       <img className="iconWatch" src={addToWatchImg} alt="" />
                     </button>
                     <button className="addBtn">

@@ -11,9 +11,11 @@ export function loginUser(token: string) {
     })
       .then((res) => res.json())
       .then((res) => {
+        console.log("login res ", res)
         localStorage.setItem('token', res.token);
         localStorage.setItem('userId', res.id);
         localStorage.setItem('username', res.name);
+        localStorage.setItem('facebookId', res.facebookId)
       })
       .catch((error) => {
         console.log('login error');
@@ -24,6 +26,7 @@ export function loginUser(token: string) {
     localStorage.removeItem('token');
     localStorage.removeItem('username');
     localStorage.removeItem('userId');
+    localStorage.removeItem('facebookId');
   }
   
   

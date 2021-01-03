@@ -29,6 +29,9 @@ class UsersController {
     const movieId = req.body.movieId;
     console.log(userId, movieId);
 
+   // const userId = "10219128442703578"
+   // const movieId = 'tron-legacy-2010'
+
     const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
     res.status(201).json(addedMovie);
   }

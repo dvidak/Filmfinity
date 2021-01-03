@@ -13,7 +13,7 @@ class AuthController {
         facebookId: profile.id,
         firstName: profile.first_name,
         lastName: profile.last_name,
-        email: profile.email,
+        email: profile.email
       });
 
       await newUser.save();
@@ -32,6 +32,7 @@ class AuthController {
         token: (req as any).token,
         id: savedUser.id,
         name: savedUser.firstName,
+        facebookId: savedUser.facebookId
       });
     } else {
       res.send(400).json({ message: 'Something went wrong' });

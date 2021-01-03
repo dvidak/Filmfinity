@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev src/index.ts",
+    "start": "nodemon src/index.ts",
     "clean": "kill -9 $(lsof -t -i :4000)",
     "build": "rm -rf build && tsc -p"
   },
@@ -22,6 +22,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.13",
+    "nodemon": "^2.0.6",
     "omdb": "^0.8.0",
     "omdbapi": "^3.0.0",
     "reflect-metadata": "^0.1.13",

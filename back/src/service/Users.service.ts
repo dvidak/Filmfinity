@@ -1,3 +1,5 @@
+import { userInfo } from 'os';
+import User from '../model/User';
 import TraktService from './Trakt.service';
 
 class UsersService {
@@ -14,6 +16,12 @@ class UsersService {
    */
   public async addToWatchlist(userId: string, movieId: string) {
     // TODO
+    const movie = this.traktService.searchTraktMovieById(movieId);
+    console.log(movie)
+    User.update(
+      { facebookId: userId },
+      { $push: { watchlist: movie } }
+    );
     console.log('Should add to watch list', userId, movieId);
   }
 
