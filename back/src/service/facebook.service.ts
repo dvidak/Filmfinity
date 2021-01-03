@@ -11,29 +11,29 @@ export const getFacebookMovies = async (fbAccessToken: string) => {
   while (true) {
     const userLikes = await Axios.get(graphRequestUrl);
 
+    console.log('userLikes', userLikes.data);
+
     let likesArray;
 
     if (userLikes.data.likes) {
       // First page
       likesArray = userLikes.data.likes.data;
-      graphRequestUrl = userLikes.data.likes.paging.next;
+      graphRequestUrl = userLikes.data.likes.paging?.next;
     } else {
       // Second or any other page
       likesArray = userLikes.data.data;
-      graphRequestUrl = userLikes.data.paging.next;
+      graphRequestUrl = userLikes.data.paging?.next;
     }
 
     let tempFbMovies = likesArray as FbLike[];
-    fbMovies = [...fbMovies, ...tempFbMovies];
+
+    if (tempFbMovies) fbMovies = [...fbMovies, ...tempFbMovies];
 
     if (!graphRequestUrl) break;
   }
 
   // Filter to only movies, films and TV shows
-  fbMovies = fbMovies.filter(
-    (fbNovie) =>
-      fbNovie.category && fbMovieCategories.includes(fbNovie.category)
-  );
+  fbMovies = fbMovies.filter((fbNovie) => fbNovie.category && fbMovieCategories.includes(fbNovie.category));
 
   return fbMovies;
 };

@@ -9,6 +9,7 @@ enum MovieType {
   POPULAR = 'POPULAR',
   TRENDING = 'TRENDING',
 }
+
 class MovieApiController {
   constructor() {
     this.fetchTraktPopularMovies = this.fetchTraktPopularMovies.bind(this)

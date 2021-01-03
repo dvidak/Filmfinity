@@ -19,7 +19,7 @@ class MasterRouter {
 
   private configure() {
     this._router.use('/', this.authRouter)
-    this._router.use('/user', this.userRouter)
+    this._router.use('/users', this.userRouter)
     this._router.use('/movie', this.movieApiRouter)
   }
 }

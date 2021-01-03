@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import User from '../model/User';
+import { getFacebookMovies } from '../service/facebook.service';
 
 class AuthController {
   public async login(req: Request, res: Response) {
     const profile = (req as any).profile;
+    const accessToken = (req as any).accessToken;
     const existingUser = await User.findOne({ facebookId: profile.id });
 
     if (!existingUser) {
@@ -16,6 +18,11 @@ class AuthController {
 
       await newUser.save();
     }
+
+    // Add liked movies to database
+    // TODO - save user's movie in database
+    const myFbMovies = await getFacebookMovies(accessToken);
+    // console.log('myFbMovies', myFbMovies);
 
     const savedUser = await User.findOne({ facebookId: profile.id });
 

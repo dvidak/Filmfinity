@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { NextFunction, Request, Response } from 'express';
+import User from '../model/User';
 
 class FacebookMiddleware {
   public async auth(req: Request, res: Response, next: NextFunction) {
@@ -16,6 +17,9 @@ class FacebookMiddleware {
         `https://graph.facebook.com/v8.0/me?fields=id,email,first_name,last_name&access_token=${authToken}`
       );
 
+      const user = await User.findOne({ facebookId: facebookResponse.data.id });
+
+      (req as any).user = user;
       (req as any).profile = facebookResponse.data;
       (req as any).accessToken = authToken;
       return next();
