@@ -14,7 +14,7 @@ export function Movies(props: Props) {
 
   return (
     <>
-      <h2 className="listName">Popular movies</h2>
+      <h2 className="listName">{props.title}</h2>
       <div className="movies">
         {props.movies.length > 0 &&
           props.movies.map((movie: Movie) => {
