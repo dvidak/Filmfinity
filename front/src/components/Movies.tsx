@@ -36,7 +36,7 @@ export function Movies(props: Props) {
                 <div className="movieDetails">
                   <h4 className="title">{movie.title}</h4>
                   <div className="addButtons">
-                    <button className="addBtn" onClick={() => handleAddToWatchlist("tron-legacy-2010")}>
+                    <button className="addBtn" onClick={() => handleAddToWatchlist("tt0084827")}>
                       <img className="iconWatch" src={addToWatchImg} alt="" />
                     </button>
                     <button className="addBtn">
