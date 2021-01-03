@@ -1,15 +1,18 @@
 import { Request, Response } from 'express';
 import User from '../model/User';
 import FacebookService from '../service/Facebook.service';
+import MapperService from '../service/Mapper.service';
 import UsersService from '../service/Users.service';
 
 class UsersController {
   private usersService: UsersService;
   private facebookService: FacebookService;
+  private mapperService: MapperService;
 
   constructor() {
     this.usersService = new UsersService();
     this.facebookService = new FacebookService();
+    this.mapperService = new MapperService();
     this.addToWatchlist = this.addToWatchlist.bind(this);
     this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
     this.addToWatchedList = this.addToWatchedList.bind(this);
@@ -58,7 +61,13 @@ class UsersController {
 
   public async getUserMovies(req: Request, res: Response) {
     const fbToken = (req as any).accessToken(req as any).profile.id;
+
+    console.log((req as any).user);
+
     const movies = await this.facebookService.getFacebookMovies(fbToken);
+
+    // const mapped = await this.mapperService.mapFbLikedMovie();
+
     res.status(200).json({ movies });
   }
 }

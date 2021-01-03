@@ -3,8 +3,15 @@ import { fbMovieCategories } from '../consts/fbMovieCategories';
 import FbLikedMovie, { FbLikedMovieInterface } from '../model/FbLikedMovie';
 import User from '../model/User';
 import { FbLike } from '../types/FbLike.type';
+import MapperService from './Mapper.service';
 
 class FacebookService {
+  private mapperService: MapperService;
+
+  constructor() {
+    this.mapperService = new MapperService();
+  }
+
   /**
    * Function gets all liked facebook movies and updates database.
    * Returns true if there was an update; false if not.
@@ -15,9 +22,17 @@ class FacebookService {
     const newFbMovies = await this.getFacebookMovies(fbAccessToken);
     const savedUser = await User.findOne({ facebookId: facebookUserId });
 
+    // console.log('ALL EXTRACTED FB MOVIES', newFbMovies);
+
     // User does not exist
     if (!savedUser) return false;
     let requiresUpdate = false;
+
+    if (savedUser.fbLikedMovies) {
+      const demoLikedMovie = savedUser.fbLikedMovies[0];
+      const mapped = await this.mapperService.mapFbLikedMovie(demoLikedMovie);
+      console.log('MAPPED', mapped);
+    }
 
     for (const newFbMovie of newFbMovies) {
       const foundIndex = savedUser.fbLikedMovies.findIndex((fbLikedMovie) => fbLikedMovie.facebookId === newFbMovie.id);
@@ -31,16 +46,15 @@ class FacebookService {
       // User has new movie liked.
       const fbLikedMovies: FbLikedMovieInterface[] = [];
       for (const newFbMovie of newFbMovies) {
-        fbLikedMovies.push(
-          new FbLikedMovie({
-            facebookId: newFbMovie.id,
-            genre: newFbMovie.genre,
-            name: newFbMovie.name,
-            verification_status: newFbMovie.verification_status,
-            birthday: newFbMovie.birthday,
-            category: newFbMovie.category,
-          })
-        );
+        const tempFbLikedMovie = new FbLikedMovie({
+          facebookId: newFbMovie.id,
+          genre: newFbMovie.genre,
+          name: newFbMovie.name,
+          verification_status: newFbMovie.verification_status,
+          birthday: newFbMovie.birthday,
+          category: newFbMovie.category,
+        });
+        fbLikedMovies.push(tempFbLikedMovie);
       }
       await User.updateOne({ facebookId: facebookUserId }, { fbLikedMovies: fbLikedMovies });
       console.log(`[FacebookService] User (${facebookUserId}) liked movies updated.`);

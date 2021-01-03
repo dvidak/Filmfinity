@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import User from '../model/User';
 import FacebookService from '../service/Facebook.service';
+import MapperService from '../service/Mapper.service';
 
 class AuthController {
   private facebookService: FacebookService;
