@@ -63,6 +63,9 @@ class RecommendationService {
     const tastediveRecs = (await this.tastediveService.getRecommendations(movieName)).Similar
       .Results as TastediveType[];
 
+    // TODO: ??
+    const traktActorsRecs = (await this.getRecommendationsBasedOnActors(traktId)) as MovieInterface[];
+
     const finalRecommendations: MovieInterface[] = [];
 
     for (const traktRec of traktRecs) {
@@ -79,6 +82,28 @@ class RecommendationService {
     }
 
     return finalRecommendations;
+  }
+
+  // From popular actors of some movie return list of actor popular movies
+  async getRecommendationsBasedOnActors(traktId: string) {
+    const traktMovie = await this.traktService.searchTraktMovieById(traktId, 'trakt');
+    const movieObject = (await this.movieService.getMovieObject(
+      traktId,
+      traktMovie[0].movie.ids.tmdb
+    )) as MovieInterface;
+
+    let traktActorMovieRecomendation: MovieInterface[] = [];
+    const actorIds = movieObject.actors.map((actor) => actor.id);
+
+    for (let actorId of actorIds) {
+      const movieCreditsObject = await this.traktService.getMovieCredits(actorId);
+      const movieFromCredits = movieCreditsObject.cast.map((element: { movie: any }) => element.movie);
+      for (let movie of movieFromCredits) {
+        const movieObject: MovieInterface = await this.movieService.getMovieObject(movie.ids.trakt, movie.ids.tmdb);
+        traktActorMovieRecomendation.push(movieObject);
+      }
+    }
+    return traktActorMovieRecomendation;
   }
 }
 

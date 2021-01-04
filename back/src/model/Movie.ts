@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { ActorType } from '../types/Actor.type';
 
 export interface MovieInterface extends Document {
   released: string;
@@ -11,6 +12,7 @@ export interface MovieInterface extends Document {
   homepage?: string;
   popularity?: number;
   poster?: string;
+  actors: ActorType[];
   traktId: string;
   coeff: number;
 }
@@ -26,6 +28,7 @@ const MovieSchema: Schema = new Schema({
   homepage: { type: String, required: false },
   popularity: { type: Number, required: false },
   poster: { type: String, required: false },
+  actors: { type: Array, required: false },
   traktId: { type: String, required: true },
   coeff: { type: Number, required: false },
 });

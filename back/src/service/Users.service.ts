@@ -1,7 +1,7 @@
 import { userInfo } from 'os';
 import User from '../model/User';
 import TraktService from './Trakt.service';
-import MovieService from '../service/Movie.service';
+import MovieService from './Movie.service';
 import TmdbService from '../service/Tmdb.service';
 
 class UsersService {

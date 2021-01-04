@@ -1,4 +1,4 @@
-import User from '../model/User';
+import { ActorType } from '../types/Actor.type';
 import TmdbService from './Tmdb.service';
 import TraktService from './Trakt.service';
 
@@ -23,7 +23,21 @@ class MovieService {
 
   public serializeMovieObject(traktMovie: any, tmdbMovie: any) {
     let movieObject: any;
-    console.log("trakt movie ", traktMovie)
+    let actors: ActorType[] = [];
+
+    tmdbMovie.credits.cast.forEach((crewObject: any) => {
+      // Movie cast is an array of more than 20 people, use only most popular
+      if (crewObject.popularity > 5) {
+        const actor: ActorType = {
+          id: crewObject.id,
+          name: crewObject.original_name,
+          character: crewObject.character,
+          image: crewObject.profile_path || null,
+        };
+        actors.push(actor);
+      }
+    });
+
     if (tmdbMovie) {
       movieObject = {
         released: tmdbMovie.release_date || traktMovie.released,
@@ -37,7 +51,14 @@ class MovieService {
         popularity: tmdbMovie.popularity,
         poster: tmdbMovie.poster_path,
         tmdb: tmdbMovie.id,
-        traktId: Array.isArray(traktMovie) ? (traktMovie[0].movie ? traktMovie[0].movie.ids.trakt : traktMovie[0].ids.trakt) : (traktMovie.movie ? traktMovie.movie.ids.trakt : traktMovie.ids.trakt)
+        actors: actors,
+        traktId: Array.isArray(traktMovie)
+          ? traktMovie[0].movie
+            ? traktMovie[0].movie.ids.trakt
+            : traktMovie[0].ids.trakt
+          : traktMovie.movie
+          ? traktMovie.movie.ids.trakt
+          : traktMovie.ids.trakt,
       };
     } else {
       movieObject = traktMovie;

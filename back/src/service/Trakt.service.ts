@@ -40,6 +40,12 @@ class TraktService {
     });
   }
 
+  public async getMovieCredits(actorId: string) {
+    return await this.trakt.people.movies({
+      id: actorId,
+    });
+  }
+
   public async traktMovies(type: MovieType) {
     if (type === MovieType.POPULAR) {
       return await this.trakt.movies.popular();
