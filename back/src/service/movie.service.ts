@@ -25,20 +25,19 @@ class MovieService {
     let movieObject: any;
     let actors: ActorType[] = [];
 
-    tmdbMovie.credits.cast.forEach((crewObject: any) => {
-      // Movie cast is an array of more than 20 people, use only most popular
-      if (crewObject.popularity > 5) {
-        const actor: ActorType = {
-          id: crewObject.id,
-          name: crewObject.original_name,
-          character: crewObject.character,
-          image: crewObject.profile_path || null,
-        };
-        actors.push(actor);
-      }
-    });
-
     if (tmdbMovie) {
+      tmdbMovie.credits.cast.forEach((crewObject: any) => {
+        // Movie cast is an array of more than 20 people, use only most popular
+        if (crewObject.popularity > 5) {
+          const actor: ActorType = {
+            id: crewObject.id,
+            name: crewObject.original_name,
+            character: crewObject.character,
+            image: crewObject.profile_path || null,
+          };
+          actors.push(actor);
+        }
+      });
       movieObject = {
         released: tmdbMovie.release_date || traktMovie.released,
         title: tmdbMovie.title || traktMovie.title,

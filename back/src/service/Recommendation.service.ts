@@ -65,8 +65,18 @@ class RecommendationService {
   }
 
   prioritizeRecommendations(movies: MovieInterface[]): MovieInterface[] {
-    let finalRecs: MovieInterface[] = movies;
-
+    let finalRecs: MovieInterface[] = movies.sort(function(a, b) {
+      var titleA = a.title.toUpperCase();
+      var titleB = b.title.toUpperCase();
+      return (titleA < titleB) ? -1 : (titleA > titleB) ? 1 : 0;
+  });
+    for (let i = 0; i < finalRecs.length - 1; i++) {
+      if (finalRecs[i+1].title == finalRecs[i].title) {
+        // Remove movie with bigger index and multiply coef by 2
+        movies.splice(i+1, 1)
+        movies[i].coeff *= 2;
+      }
+    }
     return movies;
   }
 
