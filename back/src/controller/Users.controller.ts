@@ -17,6 +17,8 @@ class UsersController {
     this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
     this.addToWatchedList = this.addToWatchedList.bind(this);
     this.removeFromWatchedList = this.removeFromWatchedList.bind(this);
+    this.getUserWatchlist = this.getUserWatchlist.bind(this);
+    this.getUserWatchedList = this.getUserWatchedList.bind(this);
   }
 
   public getUser(req: Request, res: Response) {
@@ -34,29 +36,48 @@ class UsersController {
     const movieId = req.body.movieId;
     console.log(userId, movieId);
 
-    // const userId = "10219128442703578"
-    // const movieId = 'tron-legacy-2010'
-
-    const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
-    res.status(201).json(addedMovie);
+    const user = await User.find( { facebookId: userId } );
+    if (user[0].watchlist.filter(movie => movie.traktId == movieId).length == 0) {
+      const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
+      res.status(201).json(addedMovie);
+    }
+ 
   }
 
-  public removeFromWatchlist(req: Request, res: Response) {
+  public async removeFromWatchlist(req: Request, res: Response) {
     const userId = req.params.userId;
     const movieId = req.params.movieId;
-    console.log(userId, movieId);
+    await this.usersService.removeFromWatchlist(userId, movieId);
   }
 
-  public addToWatchedList(req: Request, res: Response) {
+  public async getUserWatchlist(req: Request, res: Response) {
+    const userId = req.params.userId;
+    const watchlist = await this.usersService.getUserWatchlist(userId);
+    res.status(200).json(watchlist);
+  }
+
+  public async addToWatchedList(req: Request, res: Response) {
     const userId = req.params.userId;
     const movieId = req.body.movieId;
-    console.log(userId, movieId);
+
+    const user = await User.find( { facebookId: userId } );
+    if (user[0].watchedList.filter(movie => movie.traktId == movieId).length == 0) {
+      const addedMovie = await this.usersService.addToWatchedList(userId, movieId);
+      res.status(201).json(addedMovie);
+    }
+
   }
 
-  public removeFromWatchedList(req: Request, res: Response) {
+  public async removeFromWatchedList(req: Request, res: Response) {
     const userId = req.params.userId;
     const movieId = req.params.movieId;
-    console.log(userId, movieId);
+    await this.usersService.removeFromWatchedList(userId, movieId);
+  }
+
+  public async getUserWatchedList(req: Request, res: Response) {
+    const userId = req.params.userId;
+    const watchedList = await this.usersService.getUserWatchedList(userId);
+    res.status(200).json(watchedList);
   }
 
   public async getUserMovies(req: Request, res: Response) {

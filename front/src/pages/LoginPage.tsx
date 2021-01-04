@@ -21,13 +21,13 @@ export function LoginPage () {
     
 
     return (
-        <div className="loginWrapper">
+        <div className="login-wrapper">
             <Logo />
-            <div className="fbLogin">           
+            <div className="fb-login">           
                 <FacebookLogin
                     appId="786579368566156"
                     autoLoad={false}
-                    fields="name,email,picture"
+                    fields="name,email,picture,user_likes"
                     callback={responseFacebook}
                 />
             </div>

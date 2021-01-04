@@ -21,7 +21,9 @@ class UsersService {
    * @param movieId ID of the movie (trakt ID!)
    */
   public async addToWatchlist(userId: string, movieId: string) {
-    const traktMovie = await this.traktService.searchTraktMovieById(movieId);
+    const traktMovie = await this.traktService.searchTraktMovieById(movieId, 'trakt');
+    console.log("movieId ", movieId);
+    console.log("traktMovie ", traktMovie)
     const movieObject = await this.movieService.getMovieObject(movieId, traktMovie[0].movie.ids.tmdb);
 
     User.updateOne(
@@ -42,7 +44,7 @@ class UsersService {
   public async removeFromWatchlist(userId: string, movieId: string) {
     User.updateOne(
       { facebookId: userId },
-      { $pull: { watchlist: { $elemMatch: { traktId: movieId } } } },
+      { $pull: { watchlist: { traktId: movieId as any} } },
       function (error, success) {
             if (error) {
                 console.log(error);
@@ -52,9 +54,16 @@ class UsersService {
       });
   }
 
+  public async getUserWatchlist(facebookId: string) {
+    const user = await User.findOne({ facebookId });
+    return user?.watchlist;
+  }
+
   public async addToWatchedList(userId: string, movieId: string) {
-    const traktMovie = await this.traktService.searchTraktMovieById(movieId);
-    const movieObject = await this.movieService.getMovieObject(movieId, traktMovie[0].movie.ids.tmdb);
+    const traktMovie = await this.traktService.searchTraktMovieById(movieId, "trakt");
+    console.log("trakt movie ", traktMovie)
+    const tmdbId =  Array.isArray(traktMovie) ? (traktMovie[0].movie ? traktMovie[0].movie.ids.tmdb : traktMovie[0].ids.tmdb) : (traktMovie.movie ? traktMovie.movie.ids.tmdb : traktMovie.ids.tmdb);
+    const movieObject = await this.movieService.getMovieObject(movieId, tmdbId);
 
     User.updateOne(
       { facebookId: userId },
@@ -72,7 +81,7 @@ class UsersService {
   public async removeFromWatchedList(userId: string, movieId: string) {
     User.updateOne(
       { facebookId: userId },
-      { $pull: { watchedList: { $elemMatch: { traktId: movieId } } } },
+      { $pull: { watchedList: {traktId: movieId as any } } },
       function (error, success) {
             if (error) {
                 console.log(error);
@@ -81,6 +90,12 @@ class UsersService {
             }
       });
   }
+
+  public async getUserWatchedList(facebookId: string) {
+    const user = await User.findOne({ facebookId });
+    return user?.watchedList;
+  }
+
 }
 
 export default UsersService;

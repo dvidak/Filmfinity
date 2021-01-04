@@ -7,4 +7,5 @@ export interface Movie {
   homepage: string;
   popularity: number;
   poster: string;
+  traktId: string;
 }

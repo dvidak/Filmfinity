@@ -15,9 +15,11 @@ class UserRouter {
   }
 
   private configure() {
+    this._router.get('/:userId/watchlist', this.controller.getUserWatchlist)
     this._router.post('/:userId/watchlist', this.controller.addToWatchlist)
     this._router.delete('/:userId/watchlist/:movieId', this.controller.removeFromWatchlist)
 
+    this._router.get('/:userId/watched-list', this.controller.getUserWatchedList)
     this._router.post('/:userId/watched-list', this.controller.addToWatchedList)
     this._router.delete('/:userId/watched-list/:movieId', this.controller.removeFromWatchedList)
 

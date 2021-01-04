@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { LoginPage, HomePage } from './pages';
+import { ProtectedRoute } from './components';
+import { LoginPage, HomePage, Watchlist, WatchedList } from './pages';
 
 import "./pages/style.css"
 
@@ -11,9 +12,15 @@ function App() {
         <Route exact path="/">
           <LoginPage />
         </Route>
-        <Route pathe="/home">
+        <ProtectedRoute path="/home">
           <HomePage />
-        </Route>
+        </ProtectedRoute>
+        <ProtectedRoute path="/watchlist">
+          <Watchlist />
+        </ProtectedRoute>
+        <ProtectedRoute path="/watched-list">
+          <WatchedList />
+        </ProtectedRoute>
       </Switch>
     </BrowserRouter>
   );

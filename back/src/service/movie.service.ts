@@ -1,3 +1,4 @@
+import User from '../model/User';
 import TmdbService from './Tmdb.service';
 import TraktService from './Trakt.service';
 
@@ -22,6 +23,7 @@ class MovieService {
 
   public serializeMovieObject(traktMovie: any, tmdbMovie: any) {
     let movieObject: any;
+    console.log("trakt movie ", traktMovie)
     if (tmdbMovie) {
       movieObject = {
         released: tmdbMovie.release_date || traktMovie.released,
@@ -34,8 +36,8 @@ class MovieService {
         homepage: traktMovie.homepage || tmdbMovie.homepage,
         popularity: tmdbMovie.popularity,
         poster: tmdbMovie.poster_path,
-        traktId: traktMovie.ids.trakt,
         tmdb: tmdbMovie.id,
+        traktId: Array.isArray(traktMovie) ? (traktMovie[0].movie ? traktMovie[0].movie.ids.trakt : traktMovie[0].ids.trakt) : (traktMovie.movie ? traktMovie.movie.ids.trakt : traktMovie.ids.trakt)
       };
     } else {
       movieObject = traktMovie;

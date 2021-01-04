@@ -9,6 +9,8 @@ export interface UserInterface extends Document {
   email: string;
   fbLikedMovies: FbLikedMovieInterface[];
   mappedFbLikedMovies: MovieInterface[];
+  watchlist: MovieInterface[];
+  watchedList: MovieInterface[];
 }
 
 const UserSchema: Schema = new Schema({

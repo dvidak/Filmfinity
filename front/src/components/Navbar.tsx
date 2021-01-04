@@ -7,19 +7,19 @@ import watchlist from "../img/watchlist.png";
 export function Navbar() {
     return (
         <div className="nav">
-            <NavLink to="/movies">
+            <NavLink to="/home">
                 <div className="navLink">
                     <img src={movies} alt="movies" className="icon"></img>
                     <label className="navLabel">Movies</label>
                 </div>
             </NavLink>
-            <NavLink to="/watchList">
+            <NavLink to="/watchlist">
                 <div className="navLink">
                     <img src={watchlist} alt="watch" className="icon"></img>
                     <label className="navLabel">Watchlist</label>
                 </div>
             </NavLink>
-            <NavLink to="/watchedList">
+            <NavLink to="/watched-list">
                 <div className="navLink">
                     <img src={watchedList} alt="watched" className="icon"></img>
                     <label className="navLabel">Watched</label>
