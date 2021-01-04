@@ -11,6 +11,9 @@ export interface UserInterface extends Document {
   mappedFbLikedMovies: MovieInterface[];
   watchlist: MovieInterface[];
   watchedList: MovieInterface[];
+  facebookRecommendations: MovieInterface[];
+  genresRecommendations: MovieInterface[];
+  recommendations: MovieInterface[];
 }
 
 const UserSchema: Schema = new Schema({
@@ -22,6 +25,9 @@ const UserSchema: Schema = new Schema({
   mappedFbLikedMovies: [Movie.schema],
   watchlist: [Movie.schema],
   watchedList: [Movie.schema],
+  facebookRecommendations: [Movie.schema],
+  genresRecommendations: [Movie.schema],
+  recommendations: [Movie.schema],
 });
 
 const User = mongoose.model<UserInterface>('User', UserSchema);

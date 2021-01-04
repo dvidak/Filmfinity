@@ -21,6 +21,38 @@ class UsersController {
     this.getUserWatchedList = this.getUserWatchedList.bind(this);
   }
 
+  getFacebookRecommendations(req: Request, res: Response) {
+    User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
+      if (err) {
+        console.log(err);
+        res.send(err);
+      } else {
+        console.log(user);
+        res.send(user?.facebookRecommendations);
+      }
+    });
+  }
+
+  getGenresRecommendations(req: Request, res: Response) {
+    User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(user?.genresRecommendations);
+      }
+    });
+  }
+
+  getRecommendations(req: Request, res: Response) {
+    User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(user?.recommendations);
+      }
+    });
+  }
+
   public getUser(req: Request, res: Response) {
     User.findById(req.params.id, (err: any, user: any) => {
       if (err) {
@@ -36,12 +68,11 @@ class UsersController {
     const movieId = req.body.movieId;
     console.log(userId, movieId);
 
-    const user = await User.find( { facebookId: userId } );
-    if (user[0].watchlist.filter(movie => movie.traktId == movieId).length == 0) {
+    const user = await User.find({ facebookId: userId });
+    if (user[0].watchlist.filter((movie) => movie.traktId == movieId).length == 0) {
       const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
       res.status(201).json(addedMovie);
     }
- 
   }
 
   public async removeFromWatchlist(req: Request, res: Response) {
@@ -60,12 +91,11 @@ class UsersController {
     const userId = req.params.userId;
     const movieId = req.body.movieId;
 
-    const user = await User.find( { facebookId: userId } );
-    if (user[0].watchedList.filter(movie => movie.traktId == movieId).length == 0) {
+    const user = await User.find({ facebookId: userId });
+    if (user[0].watchedList.filter((movie) => movie.traktId == movieId).length == 0) {
       const addedMovie = await this.usersService.addToWatchedList(userId, movieId);
       res.status(201).json(addedMovie);
     }
-
   }
 
   public async removeFromWatchedList(req: Request, res: Response) {
