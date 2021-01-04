@@ -52,6 +52,7 @@ class MovieService {
         poster: tmdbMovie.poster_path,
         tmdb: tmdbMovie.id,
         actors: actors,
+        genres: tmdbMovie.genres.map((genre: any) => genre.name),
         traktId: Array.isArray(traktMovie)
           ? traktMovie[0].movie
             ? traktMovie[0].movie.ids.trakt

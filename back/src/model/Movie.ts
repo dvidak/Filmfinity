@@ -13,6 +13,7 @@ export interface MovieInterface extends Document {
   popularity?: number;
   poster?: string;
   actors: ActorType[];
+  genres: string[];
   traktId: string;
   coeff: number;
 }
@@ -29,6 +30,7 @@ const MovieSchema: Schema = new Schema({
   popularity: { type: Number, required: false },
   poster: { type: String, required: false },
   actors: { type: Array, required: false },
+  genres: { type: Array, required: false },
   traktId: { type: String, required: true },
   coeff: { type: Number, required: false },
 });
