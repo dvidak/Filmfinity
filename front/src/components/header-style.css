@@ -1,0 +1,25 @@
+header {
+  height: 60px;
+  background-color: #1d1d1d;
+  position: relative;
+}
+
+header .logo {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+header .logout {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.5;
+  transition: all 200ms ease;
+}
+
+header .logout:hover {
+  opacity: 1;
+}

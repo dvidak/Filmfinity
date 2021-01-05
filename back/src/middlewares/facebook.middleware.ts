@@ -17,8 +17,6 @@ class FacebookMiddleware {
         `https://graph.facebook.com/v8.0/me?fields=id,email,first_name,last_name,picture.width(400)&access_token=${authToken}`
       );
 
-      console.log('EVO FB DATA', facebookResponse.data);
-
       const user = await User.findOne({ facebookId: facebookResponse.data.id });
 
       (req as any).user = user;

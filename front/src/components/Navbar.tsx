@@ -6,31 +6,29 @@ import watchlist from "../img/watchlist.png";
 import user from "../img/user.png";
 
 export function Navbar() {
+  const profilePictureUrl = localStorage.getItem("picture");
+
   return (
     <div className="nav">
-      <NavLink to="/profile">
-        <div className="navLink">
-          <img src={user} alt="user" className="icon"></img>
-          <label className="navLabel">Profile</label>
-        </div>
-      </NavLink>
-      <NavLink to="/home">
-        <div className="navLink">
-          <img src={movies} alt="movies" className="icon"></img>
-          <label className="navLabel">Movies</label>
-        </div>
+      <NavLink to="/">
+        <img src={movies} alt="Movies" />
+        <div className="nav-label">Movies</div>
       </NavLink>
       <NavLink to="/watchlist">
-        <div className="navLink">
-          <img src={watchlist} alt="watch" className="icon"></img>
-          <label className="navLabel">Watchlist</label>
-        </div>
+        <img src={watchlist} alt="Watchlist" />
+        <div className="nav-label">Watchlist</div>
       </NavLink>
       <NavLink to="/watched-list">
-        <div className="navLink">
-          <img src={watchedList} alt="watched" className="icon"></img>
-          <label className="navLabel">Watched</label>
-        </div>
+        <img src={watchedList} alt="Watched list" />
+        <div className="nav-label">Watched</div>
+      </NavLink>
+      <NavLink to="/profile">
+        <img
+          src={profilePictureUrl ? profilePictureUrl : user}
+          alt="Profile"
+          className="profile"
+        />
+        <div className="nav-label">Profile</div>
       </NavLink>
     </div>
   );

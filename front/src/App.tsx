@@ -1,31 +1,37 @@
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { Movie, ProtectedRoute } from "./components";
-import { LoginPage, HomePage, Watchlist, WatchedList } from "./pages";
-import { Profile } from "./pages/Profile";
+import { HomePage } from "./pages/HomePage";
+import { LoginPage } from "./pages/LoginPage";
+import { ProfilePage } from "./pages/ProfilePage";
+import { WatchlistPage } from "./pages/WatchlistPage";
 
-import "./pages/style.css";
+import "./pages/page-styles.css";
+import { Layout } from "./components/Layout";
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/">
+        <Route exact path="/login">
           <LoginPage />
         </Route>
-        <ProtectedRoute path="/home">
-          <HomePage />
-        </ProtectedRoute>
-        <ProtectedRoute path="/profile">
-          <Profile />
-        </ProtectedRoute>
-        <ProtectedRoute path="/watchlist">
-          <Watchlist />
-        </ProtectedRoute>
-        <ProtectedRoute path="/watched-list">
-          <WatchedList />
-        </ProtectedRoute>
-        <ProtectedRoute path="/movie/:id" component={Movie} />
+
+        <Layout>
+          <ProtectedRoute path="/" exact>
+            <HomePage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/profile">
+            <ProfilePage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/watchlist">
+            <WatchlistPage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/watched-list">
+            <WatchlistPage />
+          </ProtectedRoute>
+          <ProtectedRoute path="/movie/:id" component={Movie} />
+        </Layout>
       </Switch>
     </BrowserRouter>
   );

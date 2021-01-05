@@ -6,14 +6,17 @@ import User from '../model/User';
 import { FbLike } from '../types/FbLike.type';
 import MapperService from './Mapper.service';
 import MovieService from './Movie.service';
+import RecommendationService from './Recommendation.service';
 
 class FacebookService {
   private mapperService: MapperService;
   private movieService: MovieService;
+  private recommendationService: RecommendationService;
 
   constructor() {
     this.mapperService = new MapperService();
     this.movieService = new MovieService();
+    this.recommendationService = new RecommendationService();
   }
 
   /**
@@ -61,9 +64,10 @@ class FacebookService {
       }
       await User.updateOne({ facebookId: facebookUserId }, { fbLikedMovies: fbLikedMovies, mappedFbLikedMovies });
 
-      // Map all Facebook movies and save them
-
       console.log(`[FacebookService] User (${facebookUserId}) liked movies updated.`);
+
+      const recommendations = await this.recommendationService.generateUserRecommendations(facebookUserId);
+
       return true;
     } else {
       // User does not have any new movie liked.

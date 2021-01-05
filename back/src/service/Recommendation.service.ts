@@ -1,6 +1,6 @@
 import MovieApiController from '../controller/MovieApi.controller';
 import { MovieInterface } from '../model/Movie';
-import User from '../model/User';
+import User, { UserInterface } from '../model/User';
 import { TastediveType } from '../types/Tastediv.type';
 import { TraktType } from '../types/Trakt.type';
 import MapperService from './Mapper.service';
@@ -62,7 +62,25 @@ class RecommendationService {
     console.log('[RecommendationService] Sorting movies by coefficient...');
     recommendations.sort((a, b) => b.coeff - a.coeff);
 
+    // Mark watched movies and movies on watchlist
+    console.log('[RecommendationService] Marking watchlist and watched movies...');
+    recommendations = this.filterRecommendations(user, recommendations);
+
     await User.updateOne({ facebookId: userFacebookId }, { recommendations });
+  }
+
+  /**
+   * @param user User
+   * @param recommendations Array of recommended movies
+   */
+  filterRecommendations(user: UserInterface, recommendations: MovieInterface[]) {
+    for (const rec of recommendations) {
+      const watchedList = user.watchedList.findIndex((movie) => movie.title === rec.title);
+      const watchlist = user.watchedList.findIndex((movie) => movie.title === rec.title);
+      (rec as any).watchedList = !!watchedList;
+      (rec as any).watchlist = !!watchlist;
+    }
+    return recommendations;
   }
 
   prioritizeRecommendations(movies: MovieInterface[]): MovieInterface[] {

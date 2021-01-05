@@ -13,12 +13,12 @@ export function ProtectedRoute({
   component,
   ...routeProps
 }: ProtectedRouteProps) {
-  const isLoggedIn = localStorage.getItem('facebookId');
+  const isLoggedIn = localStorage.getItem("facebookId");
   return isLoggedIn ? (
     <Route {...routeProps} exact component={component}>
       {children}
     </Route>
   ) : (
-    <Redirect to="/" />
+    <Redirect to="/login" />
   );
 }

@@ -34,9 +34,8 @@ class AuthController {
 
     if (savedUser) {
       // Update user liked movies.
-      const reloadedLikedMovies = await this.facebookService.reloadFacebookMovies(savedUser.facebookId, accessToken);
       // If movies are reloaded, need to re-run recommendation algorithm
-      // TODO
+      const reloadedLikedMovies = await this.facebookService.reloadFacebookMovies(savedUser.facebookId, accessToken);
 
       res.send({
         success: true,

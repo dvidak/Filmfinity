@@ -1,0 +1,20 @@
+.movie-list {
+  color: white;
+  margin-bottom: 30px;
+}
+
+h2.movie-list-category {
+  margin: 0;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #970000;
+  padding-bottom: 3px;
+  color: white;
+}
+
+.movie {
+  position: relative;
+  display: inline-block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 24px;
+}

@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useEffect, useState } from "react";
-import { Movies } from "../components/Movies";
 import { ProfileCard } from "../components/ProfileCard";
 import { getUser } from "../services/user";
-import loader from "../img/loader.gif";
-import { Header } from "../components/Header";
-import { Navbar } from "../components";
+import { Loader } from "../components/Loader";
+import { MoviesSection } from "../components/MoviesSection";
 
-export function Profile() {
+import "./profile-page-style.css";
+
+export function ProfilePage() {
   const [user, setUser] = useState();
   const [fbLikedMovies, setFbLikedMovies] = useState([]);
   useEffect(() => {
@@ -19,24 +19,20 @@ export function Profile() {
   }, []);
 
   return (
-    <div className="profile-wrapper">
-      <Header />
-      <Navbar />
+    <>
       {user ? (
         <>
           <div className="profile-details">
             <ProfileCard user={user}></ProfileCard>
-            <Movies
+            <MoviesSection
               title="Movies you liked on Facebook"
               movies={fbLikedMovies}
-            ></Movies>
+            ></MoviesSection>
           </div>
         </>
       ) : (
-        <div className="loader">
-          <img src={loader} className="loader-gif" alt="loading" />
-        </div>
+        <Loader />
       )}
-    </div>
+    </>
   );
 }

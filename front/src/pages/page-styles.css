@@ -28,74 +28,58 @@
   padding-top: 50px;
 }
 
-.home-wrapper {
-  display: flex;
-  flex-direction: column;
-  background: black;
-  min-height: 100%;
-  width: 100%;
-  position: absolute;
-}
-
-header {
-  height: 60px;
-  display: flex;
-  align-items: center;
-  background-color: #1d1d1d;
-  z-index: 2;
-}
-
-header a {
-  margin-bottom: -5px;
-}
-
-.header-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 0px 20px;
-}
-
-.nav {
-  min-height: 100%;
-  background: #1f1f1f;
-  display: flex;
-  flex-direction: column;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  padding: 50px 5px 0px 5px;
-}
-
-.navLink {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 40px;
-}
-
-.navLabel {
-  text-decoration: none;
-  font-size: 12px;
-  padding-top: 5px;
-  color: white;
-}
-
+/** NAV **/
 a {
   text-decoration: none;
 }
 
-.icon {
-  height: 25px;
-  opacity: 0.5;
+.nav {
+  box-sizing: border-box;
+  min-height: 100%;
+  background: #1d1d1d;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  padding: 50px 0 0 0;
 }
 
-.icon:hover {
-  opacity: 1;
+.nav a {
+  margin-top: 40px;
+  display: block;
+  text-align: center;
+}
+
+.nav a img {
+  height: 25px;
+  opacity: 0.5;
   transition: 200ms ease-in-out;
 }
+
+.nav a:hover img {
+  opacity: 1;
+}
+
+.nav a:hover .nav-label {
+  opacity: 1;
+}
+
+.nav a img.profile {
+  height: 35px;
+  opacity: 1;
+  border-radius: 50%;
+}
+
+.nav-label {
+  opacity: 0.7;
+  font-size: 11px;
+  padding-top: 5px;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/** END_OF_NAV **/
 
 .logout-icon {
   height: 20px;
@@ -106,38 +90,12 @@ a {
   height: 100%;
 }
 
-.profile-details {
-  max-width: 90%;
-  margin: auto;
-}
-
 .movies {
   display: inline-block;
 }
 
-.movie-list {
-  width: 95%;
-  color: white;
-  padding-left: 65px;
-}
-
-.movie-list-category {
-  margin-left: 25px;
-  margin-top: 30px;
-  border-bottom: 1px solid #970000;
-  padding-bottom: 3px;
-  width: 95%;
-  color: white;
-}
-
 .movie-img {
   margin: 0px;
-}
-
-.movie {
-  position: relative;
-  display: inline-block;
-  margin: 20px 24px;
 }
 
 .movie-details {
@@ -209,31 +167,4 @@ a {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
-
-.profile-card {
-  display: flex;
-  justify-content: space-around;
-  max-width: 95%;
-  width: 400px;
-  margin: 50px auto;
-  border: 1px solid white;
-  border-radius: 30px;
-  padding: 20px;
-  color: white;
-}
-
-.profile-wrapper {
-  position: absolute;
-  min-height: 100%;
-  width: 100%;
-  position: absolute;
-  background-color: #1f1f1f;
-}
-
-.avatar {
-  background-color: white;
-  width: 100px;
-  height: 100px;
-  border-radius: 30px;
 }

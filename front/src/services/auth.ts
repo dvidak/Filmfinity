@@ -11,10 +11,10 @@ export function loginUser(token: string) {
   })
     .then((res) => res.json())
     .then((res) => {
-      console.log("login res ", res);
-
       localStorage.setItem("token", token);
       localStorage.setItem("userId", res.id);
+      localStorage.setItem("picture", res.picture);
+
       localStorage.setItem("username", res.name);
       localStorage.setItem("facebookId", res.facebookId);
     })
