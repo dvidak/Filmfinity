@@ -16,7 +16,7 @@ class TraktService {
 
   // id can be Trakt ID, Trakt slug, or IMDB ID
   // id_type to lookup = trakt , imdb , tmdb , tvdb .
-  public async searchTraktMovieById(id: string, type: string = 'imdb') {
+  public async searchTraktMovieById(id: string, type: string = 'trakt') {
     return await this.trakt.search.id({
       id_type: type,
       id: id,

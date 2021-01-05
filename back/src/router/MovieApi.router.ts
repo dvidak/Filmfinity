@@ -18,6 +18,7 @@ class MovieApiRouter {
     this._router.get('/trending', this.controller.fetchTraktTrendingMovies);
     this._router.get('/tmdb/trending', this.controller.fetchTmdbTrendingMovies);
     this._router.get('/tmdb/popular', this.controller.fetchTmdbPopularMovies);
+    this._router.get('/:id', this.controller.fetchMovieObject);
 
     // Usage of trakt service
     this._router.get('/trakt/:id', this.controller.fetchById);

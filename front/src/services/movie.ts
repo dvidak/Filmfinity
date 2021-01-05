@@ -19,6 +19,14 @@ export function getPopularMovies() {
   }).then((response: any) => response.json());
 }
 
+export function getMovieObject(traktId: string) {
+
+  return fetch(`http://localhost:4000/api/movie/${traktId}`, {
+    method: "GET",
+    headers: headers,
+  }).then((response: any) => response.json());
+}
+
 export function addToWatchlist(userId: string, movieId: string) {
 
   return fetch(`http://localhost:4000/api/users/${userId}/watchlist`, {
@@ -67,4 +75,20 @@ export function deleteFromWatchedList(userId: string, movieId: string) {
     method: "DELETE",
     headers: headers,
   });
+}
+
+export function getFacebookRecommendations(userId: string) {
+
+  return fetch(`http://localhost:4000/api/users/${userId}/facebook-recommendations`, {
+    method: "GET",
+    headers: headers,
+  }).then((response: any) => response.json());;
+}
+
+export function getRecommendations(userId: string) {
+
+  return fetch(`http://localhost:4000/api/users/${userId}/recommendations`, {
+    method: "GET",
+    headers: headers,
+  }).then((response: any) => response.json());;
 }

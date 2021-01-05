@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Logo } from "../components";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { useHistory } from "react-router-dom";
 import { loginUser } from "../services/auth";
+import loader from "../img/loader2.gif";
 
 export function LoginPage () {
+    const [isLoading, setIsLoading] = useState(false);
     const history = useHistory();
 
     const responseFacebook = (response: ReactFacebookLoginInfo) => {
@@ -12,6 +14,7 @@ export function LoginPage () {
           loginUser(response.accessToken)
             .then(() => {
                 history.push("/home");
+                setIsLoading(false);
             })
             .catch(() => {
               alert('Login error');
@@ -29,9 +32,10 @@ export function LoginPage () {
                     autoLoad={false}
                     fields="name,email,picture,user_likes"
                     callback={responseFacebook}
+                    onClick={() => setIsLoading(true)}
                 />
             </div>
-
+            {isLoading && <img className="loader-gif" src={loader} />}
         </div>
     );
 }

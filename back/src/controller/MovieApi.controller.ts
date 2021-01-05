@@ -18,6 +18,7 @@ class MovieApiController {
     this.fetchTraktTrendingMovies = this.fetchTraktTrendingMovies.bind(this);
     this.fetchById = this.fetchById.bind(this);
     this.fetchByTitle = this.fetchByTitle.bind(this);
+    this.fetchMovieObject = this.fetchMovieObject.bind(this);
   }
 
   public async fetchTraktPopularMovies(_: Request, res: Response) {
@@ -53,6 +54,12 @@ class MovieApiController {
   public async fetchByTitle(req: Request, res: Response) {
     const movies = await this.traktService.searchTraktMovieByTitle(req.params.title);
     res.status(200).json(movies);
+  }
+
+  public async fetchMovieObject(req: Request, res: Response) {
+    const traktMovie = await this.traktService.searchTraktMovieById(req.params.id);
+    const movie = await this.movieService.getMovieObject(req.params.id, traktMovie[0].movie.ids.imdb);
+    res.status(200).json(movie);
   }
 
   //TMDB trending and popular is not used
