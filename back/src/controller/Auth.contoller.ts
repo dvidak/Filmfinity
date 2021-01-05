@@ -16,8 +16,6 @@ class AuthController {
     const accessToken = (req as any).accessToken;
     const existingUser = await User.findOne({ facebookId: profile.id });
 
-    console.log('PROFILE', profile);
-
     if (!existingUser) {
       const newUser = new User({
         facebookId: profile.id,

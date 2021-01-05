@@ -3,7 +3,9 @@ import { Logo } from "../components";
 import FacebookLogin, { ReactFacebookLoginInfo } from "react-facebook-login";
 import { useHistory } from "react-router-dom";
 import { loginUser } from "../services/auth";
-import loader from "../img/loader2.gif";
+import { Loader } from "../components/Loader";
+
+import "./login-page-style.css";
 
 export function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -13,7 +15,7 @@ export function LoginPage() {
     if (response.accessToken) {
       loginUser(response.accessToken)
         .then(() => {
-          history.push("/home");
+          history.push("/");
           setIsLoading(false);
         })
         .catch(() => {
@@ -23,18 +25,22 @@ export function LoginPage() {
   };
 
   return (
-    <div className="login-wrapper">
+    <div className="page-login-wrapper">
       <Logo />
-      <div className="fb-login">
-        <FacebookLogin
-          appId="786579368566156"
-          autoLoad={false}
-          fields="name,email,picture,user_likes"
-          callback={responseFacebook}
-          onClick={() => setIsLoading(true)}
-        />
-      </div>
-      {isLoading && <img className="loader-gif" src={loader} />}
+      <h1>Log in required!</h1>
+      {!isLoading ? (
+        <div className="fb-login">
+          <FacebookLogin
+            appId="786579368566156"
+            autoLoad={false}
+            fields="name,email,picture,user_likes"
+            callback={responseFacebook}
+            onClick={() => setIsLoading(true)}
+          />
+        </div>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 }

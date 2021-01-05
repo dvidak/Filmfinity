@@ -66,7 +66,8 @@ class FacebookService {
 
       console.log(`[FacebookService] User (${facebookUserId}) liked movies updated.`);
 
-      const recommendations = await this.recommendationService.generateUserRecommendations(facebookUserId);
+      await this.recommendationService.generateUserFacebookRecommendations(facebookUserId);
+      await this.recommendationService.generateUserRecommendations(facebookUserId);
 
       return true;
     } else {

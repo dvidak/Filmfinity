@@ -48,17 +48,16 @@ class UsersController {
 
   getRecommendations(req: Request, res: Response) {
     User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
-      if (err) {
+      if (err || !user) {
         res.send(err);
       } else {
-        res.send(user?.recommendations);
+        res.send(user.recommendations);
       }
     });
   }
 
   public async getUser(req: Request, res: Response) {
     const user = await User.findOne({ facebookId: req.params.id });
-    console.log(user);
     if (user) {
       res.status(200).json(user);
     } else {
@@ -69,12 +68,13 @@ class UsersController {
   public async addToWatchlist(req: Request, res: Response) {
     const userId = req.params.userId;
     const movieId = req.body.movieId;
-    console.log(userId, movieId);
 
     const user = await User.find({ facebookId: userId });
     if (user[0].watchlist.filter((movie) => movie.traktId == movieId).length == 0) {
       const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
       res.status(201).json(addedMovie);
+      await this.recommendationService.generateUserWatchlistRecommendations(userId);
+      await this.recommendationService.generateUserFacebookRecommendations(userId);
     }
   }
 
@@ -82,6 +82,9 @@ class UsersController {
     const userId = req.params.userId;
     const movieId = req.params.movieId;
     await this.usersService.removeFromWatchlist(userId, movieId);
+    res.status(200);
+    await this.recommendationService.generateUserWatchlistRecommendations(userId);
+    await this.recommendationService.generateUserFacebookRecommendations(userId);
   }
 
   public async getUserWatchlist(req: Request, res: Response) {
@@ -98,6 +101,8 @@ class UsersController {
     if (user[0].watchedList.filter((movie) => movie.traktId == movieId).length == 0) {
       const addedMovie = await this.usersService.addToWatchedList(userId, movieId);
       res.status(201).json(addedMovie);
+      await this.recommendationService.generateUserWatchlistRecommendations(userId);
+      await this.recommendationService.generateUserFacebookRecommendations(userId);
     }
   }
 
@@ -105,6 +110,9 @@ class UsersController {
     const userId = req.params.userId;
     const movieId = req.params.movieId;
     await this.usersService.removeFromWatchedList(userId, movieId);
+    res.status(200);
+    await this.recommendationService.generateUserWatchlistRecommendations(userId);
+    await this.recommendationService.generateUserFacebookRecommendations(userId);
   }
 
   public async getUserWatchedList(req: Request, res: Response) {
@@ -115,8 +123,6 @@ class UsersController {
 
   public async getUserMovies(req: Request, res: Response) {
     const fbToken = (req as any).accessToken(req as any).profile.id;
-
-    console.log((req as any).user);
 
     const movies = await this.facebookService.getFacebookMovies(fbToken);
 

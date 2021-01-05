@@ -1,0 +1,9 @@
+.page-login-wrapper {
+  padding: 100px 0;
+  text-align: center;
+}
+
+.page-login-wrapper h1 {
+  opacity: 0.9;
+  margin-top: 40px;
+}

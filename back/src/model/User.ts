@@ -13,6 +13,8 @@ export interface UserInterface extends Document {
   watchlist: MovieInterface[];
   watchedList: MovieInterface[];
   facebookRecommendations: MovieInterface[];
+  watchlistRecommendations: MovieInterface[];
+  watchedListRecommendations: MovieInterface[];
   genresRecommendations: MovieInterface[];
   recommendations: MovieInterface[];
 }
@@ -28,6 +30,8 @@ const UserSchema: Schema = new Schema({
   watchlist: [Movie.schema],
   watchedList: [Movie.schema],
   facebookRecommendations: [Movie.schema],
+  watchlistRecommendations: [Movie.schema],
+  watchedListRecommendations: [Movie.schema],
   genresRecommendations: [Movie.schema],
   recommendations: [Movie.schema],
 });

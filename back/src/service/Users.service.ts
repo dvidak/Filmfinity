@@ -76,8 +76,7 @@ class UsersService {
    */
   public async addToWatchlist(userId: string, movieId: string) {
     const traktMovie = await this.traktService.searchTraktMovieById(movieId, 'trakt');
-    console.log('movieId ', movieId);
-    console.log('traktMovie ', traktMovie);
+
     const movieObject = await this.movieService.getMovieObject(movieId, traktMovie[0].movie.ids.tmdb);
 
     User.updateOne(
@@ -117,7 +116,6 @@ class UsersService {
 
   public async addToWatchedList(userId: string, movieId: string) {
     const traktMovie = await this.traktService.searchTraktMovieById(movieId, 'trakt');
-    console.log('trakt movie ', traktMovie);
     const tmdbId = Array.isArray(traktMovie)
       ? traktMovie[0].movie
         ? traktMovie[0].movie.ids.tmdb

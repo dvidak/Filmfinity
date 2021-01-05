@@ -25,7 +25,7 @@
   margin-right: 24px;
   width: 200px;
   height: 270px;
-  transition: all 130ms ease;
+  transition: all 100ms ease;
   background-size: cover;
   cursor: pointer;
 }

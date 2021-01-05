@@ -1,4 +1,3 @@
-import MovieApiController from '../controller/MovieApi.controller';
 import { MovieInterface } from '../model/Movie';
 import User, { UserInterface } from '../model/User';
 import { TastediveType } from '../types/Tastediv.type';
@@ -24,26 +23,39 @@ class RecommendationService {
     this.tmdbService = new TmdbService();
   }
 
+  async generateUserFacebookRecommendations(userFacebookId: string) {
+    const user = await this.usersService.findUser(userFacebookId);
+    // Look at all liked movies and get recommendations for all of them
+    console.log('[RecommendationService] Generating Facebook recommendations...');
+    let recommendations = await this.getRecommendationsForMovieArray(user.mappedFbLikedMovies, 1.8);
+    await User.updateOne({ facebookId: userFacebookId }, { facebookRecommendations: recommendations });
+    return recommendations;
+  }
+
+  async generateUserWatchlistRecommendations(userFacebookId: string) {
+    const user = await this.usersService.findUser(userFacebookId);
+    console.log('[RecommendationService] Generating watchlist recommendations...');
+    let recommendations = await this.getRecommendationsForMovieArray(user.watchlist, 1.5);
+    await User.updateOne({ facebookId: userFacebookId }, { watchlistRecommendations: recommendations });
+    return recommendations;
+  }
+
+  async generateUserWatchedListRecommendations(userFacebookId: string) {
+    const user = await this.usersService.findUser(userFacebookId);
+    console.log('[RecommendationService] Generating watched list recommendations...');
+    let recommendations = await this.getRecommendationsForMovieArray(user.watchedList, 1.5);
+    await User.updateOne({ facebookId: userFacebookId }, { watchedListRecommendations: recommendations });
+    return recommendations;
+  }
+
   async generateUserRecommendations(userFacebookId: string) {
     console.log('[RecommendationService] Generating user recommendations...');
     const user = await this.usersService.findUser(userFacebookId);
     let recommendations: MovieInterface[] = [];
 
-    // Look at all liked movies and get recommendations for all of them
-    console.log('[RecommendationService] Generating Facebook recommendations...');
-    let facebookRecommendations = await this.getRecommendationsForMovieArray(user.mappedFbLikedMovies, 1.8);
-    recommendations = [...recommendations, ...facebookRecommendations];
-    await User.updateOne({ facebookId: userFacebookId }, { facebookRecommendations });
-
-    // Look at the watchlist and get recommendations for all of them
-    console.log('[RecommendationService] Generating watchlist recommendations...');
-    let watchlistRecommendations = await this.getRecommendationsForMovieArray(user.watchlist, 1.5);
-    recommendations = [...recommendations, ...watchlistRecommendations];
-
-    // Look at the watched list and get recommendations for all of them
-    console.log('[RecommendationService] Generating watched list recommendations...');
-    let watchedListRecommendations = await this.getRecommendationsForMovieArray(user.watchedList, 1.5);
-    recommendations = [...recommendations, ...watchedListRecommendations];
+    recommendations = user.facebookRecommendations;
+    recommendations = [...recommendations, ...user.watchlistRecommendations];
+    recommendations = [...recommendations, ...user.watchedListRecommendations];
 
     // Remove duplicate movies and prioritize
     console.log('[RecommendationService] Removing duplicated movies from recommendations...');
