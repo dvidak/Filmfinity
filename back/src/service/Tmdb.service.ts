@@ -13,6 +13,12 @@ class TmdbService {
       }
     }
   }
+
+  public async getRecommendations(tmbdId: string) {
+    return await Axios.get(
+      `https://api.themoviedb.org/3/movie/${tmbdId}/recommendations?api_key=${AppConfig.TMDB.API_KEY}`
+    ).then((response) => response.data.results);
+  }
 }
 
 export default TmdbService;

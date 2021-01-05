@@ -53,14 +53,14 @@ class UsersController {
     });
   }
 
-  public getUser(req: Request, res: Response) {
-    User.findById(req.params.id, (err: any, user: any) => {
-      if (err) {
-        res.send(err);
-      } else {
-        res.send(user);
-      }
-    });
+  public async getUser(req: Request, res: Response) {
+    const user = await User.findOne({ facebookId: req.params.id });
+    console.log(user);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).json({ message: 'User with given id does not exist' });
+    }
   }
 
   public async addToWatchlist(req: Request, res: Response) {

@@ -6,6 +6,7 @@ import { TraktType } from '../types/Trakt.type';
 import MapperService from './Mapper.service';
 import MovieService from './Movie.service';
 import TastediveService from './Tastedive.service';
+import TmdbService from './Tmdb.service';
 import TraktService from './Trakt.service';
 import UsersService from './Users.service';
 
@@ -15,6 +16,7 @@ class RecommendationService {
   private tastediveService: TastediveService;
   private mapperService: MapperService;
   private movieService: MovieService;
+  private tmdbService: TmdbService;
 
   constructor() {
     this.usersService = new UsersService();
@@ -22,6 +24,7 @@ class RecommendationService {
     this.tastediveService = new TastediveService();
     this.mapperService = new MapperService();
     this.movieService = new MovieService();
+    this.tmdbService = new TmdbService();
   }
 
   async generateUserRecommendations(userFacebookId: string) {
@@ -112,20 +115,31 @@ class RecommendationService {
    */
   async getRecommendations(movieName: string, traktId: string, coeff: number = 1): Promise<MovieInterface[]> {
     // Get raw recommendations
+    const traktMovie = await this.traktService.searchTraktMovieById(traktId, 'trakt');
     const traktRecs = (await this.traktService.getRelatedTraktMovies(traktId)) as TraktType[];
     const tastediveRecs = (await this.tastediveService.getRecommendations(movieName)).Similar
       .Results as TastediveType[];
-    const traktActorsRecs = await this.getRecommendationsBasedOnActors(traktId);
+    const tmdbRecs = await this.tmdbService.getRecommendations(traktMovie[0].movie.ids.tmdb);
+    const traktActorsRecs = await this.getRecommendationsBasedOnActors(traktMovie, traktId);
 
     const finalRecommendations: MovieInterface[] = [];
 
     // Compare Trakt and Tastedive recommendations - if there is the same movie, multiply it's coeff by 2
     for (const traktRec of traktRecs) {
       const idx = tastediveRecs.findIndex((tastediveRec) => tastediveRec.Name === traktRec.title);
+      const idx2 = tmdbRecs.findIndex((tmdbRec: { title: string }) => tmdbRec.title === traktRec.title);
       if (idx >= 0) {
         // Same movie is in Trakt and in Tastedive recommendations -> multiply it's importance
         const movObj = await this.movieService.getMovieObject(traktRec.ids.trakt, traktRec.ids.tmdb);
         finalRecommendations.push({ ...movObj, coeff: coeff * 2 });
+      } else if (idx2 >= 0) {
+        // Same movie is in Trakt and in TMDB recommendations -> multiply it's importance
+        const movObj = await this.movieService.getMovieObject(traktRec.ids.trakt, traktRec.ids.tmdb);
+        finalRecommendations.push({ ...movObj, coeff: coeff * 2 });
+      } else if (idx >= 0 && idx2 >= 0) {
+        // Same movie is in Trakt, TMDB and Tastedive recommendations -> multiply it's importance
+        const movObj = await this.movieService.getMovieObject(traktRec.ids.trakt, traktRec.ids.tmdb);
+        finalRecommendations.push({ ...movObj, coeff: coeff * 3 });
       } else {
         // Movie appears only in Trakt
         const movObj = await this.movieService.getMovieObject(traktRec.ids.trakt, traktRec.ids.tmdb);
@@ -146,8 +160,7 @@ class RecommendationService {
   }
 
   // From popular actors of some movie return list of actor popular movies
-  async getRecommendationsBasedOnActors(traktId: string) {
-    const traktMovie = await this.traktService.searchTraktMovieById(traktId, 'trakt');
+  async getRecommendationsBasedOnActors(traktMovie: any, traktId: string) {
     const movieObject = (await this.movieService.getMovieObject(
       traktId,
       traktMovie[0].movie.ids.tmdb
