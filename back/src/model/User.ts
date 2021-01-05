@@ -7,6 +7,7 @@ export interface UserInterface extends Document {
   firstName: string;
   lastName: string;
   email: string;
+  picture: string;
   fbLikedMovies: FbLikedMovieInterface[];
   mappedFbLikedMovies: MovieInterface[];
   watchlist: MovieInterface[];
@@ -21,6 +22,7 @@ const UserSchema: Schema = new Schema({
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
+  picture: { type: String, required: false },
   fbLikedMovies: [FbLikedMovie.schema],
   mappedFbLikedMovies: [Movie.schema],
   watchlist: [Movie.schema],

@@ -14,8 +14,10 @@ class FacebookMiddleware {
 
     try {
       const facebookResponse = await Axios.get(
-        `https://graph.facebook.com/v8.0/me?fields=id,email,first_name,last_name&access_token=${authToken}`
+        `https://graph.facebook.com/v8.0/me?fields=id,email,first_name,last_name,picture.width(400)&access_token=${authToken}`
       );
+
+      console.log('EVO FB DATA', facebookResponse.data);
 
       const user = await User.findOne({ facebookId: facebookResponse.data.id });
 
@@ -24,6 +26,7 @@ class FacebookMiddleware {
       (req as any).accessToken = authToken;
       return next();
     } catch (error) {
+      console.log(error.response);
       const status = error.response.status;
       const message = error.response.statusText;
       return res.status(status).json({ message: message });

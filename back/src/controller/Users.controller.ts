@@ -2,32 +2,35 @@ import { Request, Response } from 'express';
 import User from '../model/User';
 import FacebookService from '../service/Facebook.service';
 import MapperService from '../service/Mapper.service';
+import RecommendationService from '../service/Recommendation.service';
 import UsersService from '../service/Users.service';
 
 class UsersController {
   private usersService: UsersService;
   private facebookService: FacebookService;
   private mapperService: MapperService;
+  private recommendationService: RecommendationService;
 
   constructor() {
     this.usersService = new UsersService();
     this.facebookService = new FacebookService();
     this.mapperService = new MapperService();
+    this.recommendationService = new RecommendationService();
     this.addToWatchlist = this.addToWatchlist.bind(this);
     this.removeFromWatchlist = this.removeFromWatchlist.bind(this);
     this.addToWatchedList = this.addToWatchedList.bind(this);
     this.removeFromWatchedList = this.removeFromWatchedList.bind(this);
     this.getUserWatchlist = this.getUserWatchlist.bind(this);
     this.getUserWatchedList = this.getUserWatchedList.bind(this);
+    this.getFacebookRecommendations = this.getFacebookRecommendations.bind(this);
   }
 
-  getFacebookRecommendations(req: Request, res: Response) {
+  async getFacebookRecommendations(req: Request, res: Response) {
+    await this.recommendationService.generateUserRecommendations(req.params.userId);
     User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
       if (err) {
-        console.log(err);
         res.send(err);
       } else {
-        console.log(user);
         res.send(user?.facebookRecommendations);
       }
     });

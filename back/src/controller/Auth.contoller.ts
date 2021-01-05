@@ -16,11 +16,14 @@ class AuthController {
     const accessToken = (req as any).accessToken;
     const existingUser = await User.findOne({ facebookId: profile.id });
 
+    console.log('PROFILE', profile);
+
     if (!existingUser) {
       const newUser = new User({
         facebookId: profile.id,
         firstName: profile.first_name,
         lastName: profile.last_name,
+        picture: profile.picture.data.url,
         email: profile.email,
       });
 
@@ -41,6 +44,7 @@ class AuthController {
         id: savedUser.id,
         name: savedUser.firstName,
         facebookId: savedUser.facebookId,
+        picture: savedUser.picture,
       });
     } else {
       res.send(400).json({ message: 'Something went wrong' });

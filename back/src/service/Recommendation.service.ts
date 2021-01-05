@@ -62,21 +62,19 @@ class RecommendationService {
     console.log('[RecommendationService] Sorting movies by coefficient...');
     recommendations.sort((a, b) => b.coeff - a.coeff);
 
-    console.log('ALL RECOMMENDATIONS--------------------------');
-    console.log(recommendations);
     await User.updateOne({ facebookId: userFacebookId }, { recommendations });
   }
 
   prioritizeRecommendations(movies: MovieInterface[]): MovieInterface[] {
-    let finalRecs: MovieInterface[] = movies.sort(function(a, b) {
+    let finalRecs: MovieInterface[] = movies.sort(function (a, b) {
       var titleA = a.title.toUpperCase();
       var titleB = b.title.toUpperCase();
-      return (titleA < titleB) ? -1 : (titleA > titleB) ? 1 : 0;
-  });
+      return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
+    });
     for (let i = 0; i < finalRecs.length - 1; i++) {
-      if (finalRecs[i+1].title == finalRecs[i].title) {
+      if (finalRecs[i + 1].title == finalRecs[i].title) {
         // Remove movie with bigger index and multiply coef by 2
-        movies.splice(i+1, 1)
+        movies.splice(i + 1, 1);
         movies[i].coeff *= 2;
       }
     }
@@ -84,7 +82,7 @@ class RecommendationService {
   }
 
   async getGenresRecommendations(genres: string[]) {
-    console.log('GETTING GENRE RECOMMENDATIONS', genres);
+    // console.log('GETTING GENRE RECOMMENDATIONS', genres);
 
     // TODO
     // TODO
@@ -101,7 +99,7 @@ class RecommendationService {
   async getRecommendationsForMovieArray(movies: MovieInterface[], coeff = 1): Promise<MovieInterface[]> {
     let finalRecommendations: MovieInterface[] = [];
     for (const movie of movies) {
-      const movieRecommendations = await this.getRecommendations(movie.title, movie.traktId, coeff);
+      const movieRecommendations = await this.getRecommendations(movie.title, movie.traktId, movie.tmdbId, coeff);
       finalRecommendations = [...finalRecommendations, ...movieRecommendations];
     }
     return finalRecommendations;
@@ -113,14 +111,18 @@ class RecommendationService {
    * @param traktId Trakt ID of the movie
    * @param coeff Coefficient of importance, default 1
    */
-  async getRecommendations(movieName: string, traktId: string, coeff: number = 1): Promise<MovieInterface[]> {
+  async getRecommendations(
+    movieName: string,
+    traktId: string,
+    tmdbId: string,
+    coeff: number = 1
+  ): Promise<MovieInterface[]> {
     // Get raw recommendations
-    const traktMovie = await this.traktService.searchTraktMovieById(traktId, 'trakt');
     const traktRecs = (await this.traktService.getRelatedTraktMovies(traktId)) as TraktType[];
     const tastediveRecs = (await this.tastediveService.getRecommendations(movieName)).Similar
       .Results as TastediveType[];
-    const tmdbRecs = await this.tmdbService.getRecommendations(traktMovie[0].movie.ids.tmdb);
-    const traktActorsRecs = await this.getRecommendationsBasedOnActors(traktMovie, traktId);
+    const tmdbRecs = await this.tmdbService.getRecommendations(tmdbId);
+    const traktActorsRecs = await this.getRecommendationsBasedOnActors(traktId, tmdbId);
 
     const finalRecommendations: MovieInterface[] = [];
 
@@ -152,7 +154,6 @@ class RecommendationService {
       const idx = traktActorsRecs.findIndex((actorRec) => actorRec.title === finalRecommendations[i].title);
       if (idx >= 0) {
         finalRecommendations[i].coeff *= 2;
-        console.log('FOUND ONE SAME!!!');
       }
     }
 
@@ -160,11 +161,8 @@ class RecommendationService {
   }
 
   // From popular actors of some movie return list of actor popular movies
-  async getRecommendationsBasedOnActors(traktMovie: any, traktId: string) {
-    const movieObject = (await this.movieService.getMovieObject(
-      traktId,
-      traktMovie[0].movie.ids.tmdb
-    )) as MovieInterface;
+  async getRecommendationsBasedOnActors(traktId: string, tmdbId: string) {
+    const movieObject = (await this.movieService.getMovieObject(traktId, tmdbId)) as MovieInterface;
 
     let traktActorMovieRecomendation: MovieInterface[] = [];
     const actorIds = movieObject.actors.map((actor) => actor.id);

@@ -49,7 +49,7 @@ class MovieService {
         homepage: traktMovie.homepage || tmdbMovie.homepage,
         popularity: tmdbMovie.popularity,
         poster: tmdbMovie.poster_path,
-        tmdb: tmdbMovie.id,
+        tmdbId: tmdbMovie.id,
         actors: actors,
         genres: tmdbMovie.genres.map((genre: any) => genre.name),
         traktId: Array.isArray(traktMovie)

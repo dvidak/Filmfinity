@@ -15,6 +15,7 @@ export interface MovieInterface extends Document {
   actors: ActorType[];
   genres: string[];
   traktId: string;
+  tmdbId: string;
   coeff: number;
 }
 
@@ -32,6 +33,7 @@ const MovieSchema: Schema = new Schema({
   actors: { type: Array, required: false },
   genres: { type: Array, required: false },
   traktId: { type: String, required: true },
+  tmdbId: { type: String, required: false },
   coeff: { type: Number, required: false },
 });
 
