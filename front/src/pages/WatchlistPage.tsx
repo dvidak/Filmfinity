@@ -1,29 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { getUserWatchlist } from "../services/movie";
-import loader from "../img/loader.gif";
 import { MoviesSection } from "../components/MoviesSection";
+import { Movie } from "../models/Movie";
 
 export function WatchlistPage() {
   const userId = localStorage.getItem("facebookId");
-  const [watchlist, setWatchlist] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [watchlist, setWatchlist] = useState<Movie[] | undefined>(undefined);
 
   useEffect(() => {
     getUserWatchlist(userId as string).then((movies) => {
+      console.log(movies);
       setWatchlist(movies);
-      setIsLoading(false);
     });
   }, [userId]);
 
-  return (
-    <div className="movie-list">
-      {isLoading ? (
-        <div className="loader">
-          <img src={loader} className="loader-gif" alt="loading" />
-        </div>
-      ) : (
-        <MoviesSection title="Watchlist" movies={watchlist} watchlist />
-      )}
-    </div>
-  );
+  return <MoviesSection title="Watchlist" movies={watchlist} watchlist />;
 }

@@ -1,9 +1,4 @@
-.movie-list {
-  color: white;
-  margin-bottom: 30px;
-}
-
-h2.movie-list-category {
+.movies-section__title {
   margin: 0;
   margin-bottom: 10px;
   border-bottom: 1px solid #970000;
@@ -11,10 +6,83 @@ h2.movie-list-category {
   color: white;
 }
 
-.movie {
+.no-movies {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.movies-section__list {
+  width: 100%;
+}
+
+.movie-thumbnail {
   position: relative;
   display: inline-block;
   margin-top: 20px;
   margin-bottom: 20px;
   margin-right: 24px;
+  width: 200px;
+  height: 270px;
+  transition: all 130ms ease;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.movie-thumbnail:hover {
+  margin-right: 14px;
+  margin-left: -10px;
+  margin-top: -10px;
+  margin-bottom: 10px;
+  width: 220px;
+  height: 290px;
+  box-shadow: 0px 0px 21px 1px rgba(151, 0, 0, 1);
+}
+
+.movie-thumbnail__details h4 {
+  color: white;
+  margin: 0 0 10px 0;
+  padding: 0;
+}
+
+.movie-thumbnail__details {
+  box-sizing: border-box;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.85);
+  bottom: 0;
+  width: 100%;
+  padding: 10px;
+}
+
+.movie-thumbnail__details__buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.movie-details-button {
+  outline: none;
+  border: none;
+  background-color: #970000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 10px;
+  width: 40px;
+}
+
+/** ICONS **/
+
+.icon-like {
+  height: 18px;
+}
+
+.icon-watch {
+  height: 25px;
+}
+
+.icon-delete {
+  height: 20px;
+  padding: 3px;
 }

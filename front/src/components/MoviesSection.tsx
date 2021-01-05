@@ -11,12 +11,13 @@ import {
   deleteFromWatchlist,
   deleteFromWatchedList,
 } from "../services/movie";
+import { Loader } from "./Loader";
 
 import "./movies-section-style.css";
 
 interface Props {
   title: string;
-  movies: Movie[];
+  movies: Movie[] | undefined;
   watchlist?: boolean;
   watchedList?: boolean;
 }
@@ -53,26 +54,25 @@ export function MoviesSection(props: Props) {
   };
 
   return (
-    <>
-      <h2 className="movie-list-category">{props.title}</h2>
-      <div className="movies">
-        {props.movies.length > 0 &&
+    <div className="movies-section">
+      <h2 className="movies-section__title">{props.title}</h2>
+      <div className="movies-section__list">
+        {props.movies !== undefined && props.movies.length === 0 ? (
+          <div className="no-movies">No movies.</div>
+        ) : props.movies !== undefined && props.movies.length > 0 ? (
           props.movies.map((movie: Movie) => {
             return (
               <div
-                className="movie"
+                className="movie-thumbnail"
                 key={movie.title}
                 onClick={() => routeChange(movie.traktId)}
+                style={{
+                  backgroundImage: `url('${posterUrl + movie.poster}')`,
+                }}
               >
-                <img
-                  src={posterUrl + movie.poster}
-                  className="movie-img"
-                  alt={movie.title}
-                  key={movie.popularity}
-                />
-                <div className="movie-details">
-                  <h4 className="movie-details-title">{movie.title}</h4>
-                  <div className="movie-details-buttons">
+                <div className="movie-thumbnail__details">
+                  <h4>{movie.title}</h4>
+                  <div className="movie-thumbnail__details__buttons">
                     {props.watchlist ? (
                       <>
                         <button
@@ -139,8 +139,11 @@ export function MoviesSection(props: Props) {
                 </div>
               </div>
             );
-          })}
+          })
+        ) : (
+          <Loader />
+        )}
       </div>
-    </>
+    </div>
   );
 }

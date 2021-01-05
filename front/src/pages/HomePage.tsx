@@ -5,15 +5,22 @@ import {
   getRecommendations,
   getTrendingMovies,
 } from "../services/movie";
-import loader from "../img/loader.gif";
 import { MoviesSection } from "../components/MoviesSection";
+import { Movie } from "../models/Movie";
 
 export function HomePage() {
-  const [popularMovies, setPopularMoivies] = useState([]);
-  const [trendingMovies, setTrendingMovies] = useState([]);
-  const [fbRecommendations, setFbRecommendations] = useState([]);
-  const [recommendations, setRecommendations] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [popularMovies, setPopularMoivies] = useState<Movie[] | undefined>(
+    undefined
+  );
+  const [trendingMovies, setTrendingMovies] = useState<Movie[] | undefined>(
+    undefined
+  );
+  const [fbRecommendations, setFbRecommendations] = useState<
+    Movie[] | undefined
+  >(undefined);
+  const [recommendations, setRecommendations] = useState<Movie[] | undefined>(
+    undefined
+  );
 
   const userId = localStorage.getItem("facebookId");
 
@@ -30,31 +37,12 @@ export function HomePage() {
     );
   }, [userId]);
 
-  useEffect(() => {
-    if (
-      popularMovies.length > 0 &&
-      trendingMovies.length > 0 &&
-      fbRecommendations.length > 0 &&
-      recommendations.length > 0
-    ) {
-      setIsLoading(false);
-    }
-  }, [popularMovies, trendingMovies, fbRecommendations, recommendations]);
-
   return (
     <div className="movie-list">
-      {isLoading ? (
-        <div className="loader">
-          <img src={loader} className="loader-gif" alt="loading" />
-        </div>
-      ) : (
-        <>
-          <MoviesSection title="Recommended movies" movies={recommendations} />
-          <MoviesSection title="Based od Facebook" movies={fbRecommendations} />
-          <MoviesSection title="Trending movies" movies={trendingMovies} />
-          <MoviesSection title="Popular movies" movies={popularMovies} />
-        </>
-      )}
+      <MoviesSection title="Recommended movies" movies={recommendations} />
+      <MoviesSection title="Based od Facebook" movies={fbRecommendations} />
+      <MoviesSection title="Trending movies" movies={trendingMovies} />
+      <MoviesSection title="Popular movies" movies={popularMovies} />
     </div>
   );
 }

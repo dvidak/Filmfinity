@@ -85,67 +85,10 @@ a {
   height: 20px;
 }
 
-.movies-wrapper {
-  display: flex;
-  height: 100%;
-}
-
-.movies {
-  display: inline-block;
-}
-
-.movie-img {
-  margin: 0px;
-}
-
-.movie-details {
-  position: absolute;
-  background-color: rgba(0, 0, 0, 0.85);
-  bottom: 4px;
-  padding: 5px;
-  width: 100%;
-}
-
-.movie-details-title {
-  margin: 2px;
-}
-
-.movie-details-buttons {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.movie-details-button {
-  outline: none;
-  border: none;
-  background-color: #970000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  margin-right: 10px;
-  margin-top: 10px;
-  width: 40px;
-}
-
-.icon-like {
-  height: 18px;
-}
-
-.icon-watch {
-  height: 25px;
-}
-
-.icon-delete {
-  height: 20px;
-  padding: 3px;
-}
-
 .loader {
-  display: flex;
-  justify-content: center;
+  width: 100%;
+  text-align: center;
   margin-top: 30px;
-  margin-left: -80px;
 }
 
 .loader-gif {

@@ -1,7 +1,8 @@
 body {
   margin: 0;
   font-family: "Prompt", sans-serif;
-  background: black;
+  background: #000000;
+  color: rgb(231, 231, 231);
 }
 
 code {
