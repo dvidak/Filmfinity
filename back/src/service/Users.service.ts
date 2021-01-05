@@ -49,6 +49,26 @@ class UsersService {
     return genres;
   }
 
+  async getUserGenreCount(facebookUserId: string) {
+    const user = await this.findUser(facebookUserId);
+    let coef = new Map();
+
+    // foreach movie
+    for (const fbLikedMovie of user.mappedFbLikedMovies) {
+      //foreach genre of movie
+      if (fbLikedMovie.genres) {
+        for (const genre of fbLikedMovie.genres) {
+          if (coef.has(genre)) {
+            coef.set(genre, coef.get(genre) + 1);
+          } else {
+            coef.set(genre, 1);
+          }
+        }
+      }
+    }
+    return coef;
+  }
+
   /**
    * Method adds movie to the user's watchlist.
    * @param userId ID of the user (facebook ID!)

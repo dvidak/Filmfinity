@@ -3,7 +3,6 @@ import { MovieInterface } from '../model/Movie';
 import User, { UserInterface } from '../model/User';
 import { TastediveType } from '../types/Tastediv.type';
 import { TraktType } from '../types/Trakt.type';
-import MapperService from './Mapper.service';
 import MovieService from './Movie.service';
 import TastediveService from './Tastedive.service';
 import TmdbService from './Tmdb.service';
@@ -14,7 +13,6 @@ class RecommendationService {
   private usersService: UsersService;
   private traktService: TraktService;
   private tastediveService: TastediveService;
-  private mapperService: MapperService;
   private movieService: MovieService;
   private tmdbService: TmdbService;
 
@@ -22,7 +20,6 @@ class RecommendationService {
     this.usersService = new UsersService();
     this.traktService = new TraktService();
     this.tastediveService = new TastediveService();
-    this.mapperService = new MapperService();
     this.movieService = new MovieService();
     this.tmdbService = new TmdbService();
   }
@@ -38,12 +35,6 @@ class RecommendationService {
     recommendations = [...recommendations, ...facebookRecommendations];
     await User.updateOne({ facebookId: userFacebookId }, { facebookRecommendations });
 
-    // Look at genres
-    console.log('[RecommendationService] Generating genres recommendations...');
-    const genres = await this.usersService.getAllUserGenres(userFacebookId);
-    const genresRecommendations = await this.getGenresRecommendations(genres);
-    await User.updateOne({ facebookId: userFacebookId }, { genresRecommendations });
-
     // Look at the watchlist and get recommendations for all of them
     console.log('[RecommendationService] Generating watchlist recommendations...');
     let watchlistRecommendations = await this.getRecommendationsForMovieArray(user.watchlist, 1.5);
@@ -58,9 +49,8 @@ class RecommendationService {
     console.log('[RecommendationService] Removing duplicated movies from recommendations...');
     recommendations = this.prioritizeRecommendations(recommendations);
 
-    // Sort movies by coeff
-    console.log('[RecommendationService] Sorting movies by coefficient...');
-    recommendations.sort((a, b) => b.coeff - a.coeff);
+    console.log('[RecommendationService] Update coef based on user genre fb preference...');
+    recommendations = await this.getGenresRecommendations(recommendations);
 
     // Mark watched movies and movies on watchlist
     console.log('[RecommendationService] Marking watchlist and watched movies...');
@@ -99,14 +89,22 @@ class RecommendationService {
     return movies;
   }
 
-  async getGenresRecommendations(genres: string[]) {
-    // console.log('GETTING GENRE RECOMMENDATIONS', genres);
-
-    // TODO
-    // TODO
-    // TODO
-
-    return [];
+  /**
+   * Function returns movie recommendations for a specific array of movies based on genre preferences.
+   * @param movies Array of movies (MovieInterface objects)
+   * @param coeff Coefficient of importance, default 1
+   */
+  async getGenresRecommendations(movies: MovieInterface[], coef: number = 1): Promise<MovieInterface[]> {
+    const genres = await this.usersService.getUserGenreCount('3531360170284223');
+    return movies.map((movie) => {
+      const movieGenreCoef = movie.genres
+        .map((genre) => {
+          return genres.has(genre) ? genres.get(genre) : -1;
+        })
+        .reduce((prev, curr) => prev + curr);
+      movie.coeff += movieGenreCoef * coef;
+      return movie;
+    });
   }
 
   /**
