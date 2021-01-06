@@ -1,0 +1,98 @@
+.movie {
+  color: white;
+}
+
+.movie-poster {
+  height: 300px;
+}
+
+.actor {
+  margin-top: 15px;
+}
+
+.actor-details-container {
+  width: 120px;
+  position: relative;
+  display: inline-flex;
+  padding-right: 20px;
+  padding-top: 10px;
+}
+
+.actor-details {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.actor-details__image {
+  width: 120px;
+  margin-bottom: 10px;
+}
+
+h5 {
+  color: #970000;
+  margin: 0px;
+}
+
+p {
+  margin: 0px;
+  text-align: center;
+}
+
+.movie-cast-title {
+  margin: 0;
+  margin-top: 30px;
+  border-bottom: 1px solid #970000;
+  padding-bottom: 3px;
+  color: white;
+}
+
+.movie-details-container {
+  display: flex;
+}
+
+.movie-details {
+  background-color: transparent;
+  height: 260px;
+  margin-left: 50px;
+  border-radius: 30px;
+  padding: 20px;
+}
+
+.movie-details__genres {
+  display: flex;
+}
+
+.movie-details__genre {
+  padding-left: 10px;
+}
+
+.movie-details__overview {
+  text-align: start;
+  padding-left: 10px;
+}
+
+.p {
+  padding-top: 15px;
+}
+
+.grey {
+  opacity: 0.5;
+}
+
+.movie-details__clock {
+  height: 25px;
+  padding-left: 10px;
+}
+
+.movie-details__star {
+  height: 25px;
+  padding-left: 30px;
+}
+
+.movie-details__runtime {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}

@@ -65,13 +65,12 @@ export function MoviesSection(props: Props) {
               <div
                 className="movie-thumbnail"
                 key={movie.title}
-                onClick={() => routeChange(movie.traktId)}
                 style={{
                   backgroundImage: `url('${posterUrl + movie.poster}')`,
                 }}
               >
                 <div className="movie-thumbnail__details">
-                  <h4>{movie.title}</h4>
+                  <h4 onClick={() => routeChange(movie.traktId)}>{movie.title}</h4>
                   <div className="movie-thumbnail__details__buttons">
                     {props.watchlist ? (
                       <>
