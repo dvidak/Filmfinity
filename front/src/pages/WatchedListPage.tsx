@@ -16,6 +16,11 @@ export function WatchedListPage() {
   }, []);
 
   return (
-    <MoviesSection title="Watched list" movies={watchedList} setWatchedList={setWatchedList} watchedList />
+    <MoviesSection
+      title="Watched list"
+      movies={watchedList}
+      setWatchedList={setWatchedList}
+      watchedList
+    />
   );
 }

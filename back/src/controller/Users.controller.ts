@@ -74,7 +74,7 @@ class UsersController {
       const addedMovie = await this.usersService.addToWatchlist(userId, movieId);
       res.status(201).json(addedMovie);
       await this.recommendationService.generateUserWatchlistRecommendations(userId);
-      await this.recommendationService.generateUserFacebookRecommendations(userId);
+      await this.recommendationService.generateUserRecommendations(userId);
     }
   }
 
@@ -84,7 +84,7 @@ class UsersController {
     await this.usersService.removeFromWatchlist(userId, movieId);
     res.status(200);
     await this.recommendationService.generateUserWatchlistRecommendations(userId);
-    await this.recommendationService.generateUserFacebookRecommendations(userId);
+    await this.recommendationService.generateUserRecommendations(userId);
   }
 
   public async getUserWatchlist(req: Request, res: Response) {
@@ -102,7 +102,7 @@ class UsersController {
       const addedMovie = await this.usersService.addToWatchedList(userId, movieId);
       res.status(201).json(addedMovie);
       await this.recommendationService.generateUserWatchlistRecommendations(userId);
-      await this.recommendationService.generateUserFacebookRecommendations(userId);
+      await this.recommendationService.generateUserRecommendations(userId);
     }
   }
 
@@ -112,7 +112,7 @@ class UsersController {
     await this.usersService.removeFromWatchedList(userId, movieId);
     res.status(200);
     await this.recommendationService.generateUserWatchlistRecommendations(userId);
-    await this.recommendationService.generateUserFacebookRecommendations(userId);
+    await this.recommendationService.generateUserRecommendations(userId);
   }
 
   public async getUserWatchedList(req: Request, res: Response) {

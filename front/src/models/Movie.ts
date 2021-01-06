@@ -8,4 +8,6 @@ export interface Movie {
   popularity: number;
   poster: string;
   traktId: string;
+  isOnWatchlist: boolean;
+  isOnWatchedList: boolean;
 }

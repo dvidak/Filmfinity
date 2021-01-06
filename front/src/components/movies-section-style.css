@@ -61,16 +61,31 @@
   justify-content: flex-end;
 }
 
-.movie-details-button {
-  outline: none;
-  border: none;
-  background-color: #970000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.movie-thumbnail__details__buttons button {
   cursor: pointer;
-  margin-left: 10px;
-  width: 40px;
+  background: transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 30px;
+  border: 0;
+  opacity: 0.5;
+  transition: all 150ms ease;
+  margin-left: 20px;
+}
+
+.movie-thumbnail__details__buttons button:hover {
+  opacity: 1;
+}
+
+.movie-thumbnail__details__buttons button.delete {
+  background-image: url("../img/delete.png");
+}
+.movie-thumbnail__details__buttons button.watchlist {
+  background-image: url("../img/addToWatch.png");
+}
+.movie-thumbnail__details__buttons button.watched-list {
+  background-image: url("../img/addToWatched.png");
 }
 
 /** ICONS **/

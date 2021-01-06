@@ -77,7 +77,6 @@ export function MoviesSection(props: Props) {
           <div className="no-movies">No movies.</div>
         ) : props.movies !== undefined && props.movies.length > 0 ? (
           props.movies.map((movie: Movie) => {
-            console.log(movie);
             return (
               <div
                 className="movie-thumbnail"
@@ -89,69 +88,43 @@ export function MoviesSection(props: Props) {
                 <div className="movie-thumbnail__details">
                   <h4 onClick={() => routeChange(movie.traktId)}>
                     {movie.title}
+                    {movie.isOnWatchedList}
+                    {movie.isOnWatchlist}
                   </h4>
                   <div className="movie-thumbnail__details__buttons">
-                    {props.watchlist ? (
-                      <>
+                    {!props.watchedList &&
+                      !props.watchlist &&
+                      !movie.isOnWatchlist && (
                         <button
-                          className="movie-details-button"
-                          onClick={() =>
-                            handleDeleteFromWatchlist(`${movie.traktId}`)
-                          }
-                        >
-                          <img className="icon-delete" src={deleteImg} alt="" />
-                        </button>
+                          className="watchlist"
+                          onClick={() => {
+                            movie.isOnWatchlist = true;
+                            handleAddToWatchlist(`${movie.traktId}`);
+                          }}
+                        />
+                      )}
+                    {!props.watchedList &&
+                      !props.watchlist &&
+                      !movie.isOnWatchedList && (
                         <button
-                          className="movie-details-button"
-                          onClick={() =>
-                            handleRemoveToWatchedList(`${movie.traktId}`)
+                          className="watched-list"
+                          onClick={() => {
+                            movie.isOnWatchedList = true;
+                            handleAddToWatchedList(`${movie.traktId}`);
+                          }}
+                        />
+                      )}
+                    {(props.watchedList || props.watchlist) && (
+                      <button
+                        className="delete"
+                        onClick={() => {
+                          if (props.watchlist) {
+                            handleDeleteFromWatchlist(`${movie.traktId}`);
+                          } else if (props.watchedList) {
+                            handleDeleteFromWatchedList(`${movie.traktId}`);
                           }
-                        >
-                          <img
-                            className="icon-like"
-                            src={addToWatchedImg}
-                            alt=""
-                          />
-                        </button>
-                      </>
-                    ) : props.watchedList ? (
-                      <>
-                        <button
-                          className="movie-details-button"
-                          onClick={() =>
-                            handleDeleteFromWatchedList(`${movie.traktId}`)
-                          }
-                        >
-                          <img className="icon-delete" src={deleteImg} alt="" />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <button
-                          className="movie-details-button"
-                          onClick={() =>
-                            handleAddToWatchlist(`${movie.traktId}`)
-                          }
-                        >
-                          <img
-                            className="icon-watch"
-                            src={addToWatchImg}
-                            alt=""
-                          />
-                        </button>
-                        <button
-                          className="movie-details-button"
-                          onClick={() =>
-                            handleAddToWatchedList(`${movie.traktId}`)
-                          }
-                        >
-                          <img
-                            className="icon-like"
-                            src={addToWatchedImg}
-                            alt=""
-                          />
-                        </button>
-                      </>
+                        }}
+                      />
                     )}
                   </div>
                 </div>

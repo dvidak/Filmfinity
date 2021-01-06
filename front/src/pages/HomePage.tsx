@@ -29,7 +29,7 @@ export function HomePage() {
       setTrendingMovies(movies);
     });
     getPopularMovies().then((movies) => setPopularMoivies(movies));
-    getFacebookRecommendations("10207920536328851").then((movies) =>
+    getFacebookRecommendations(userId as string).then((movies) =>
       setFbRecommendations(movies as never)
     );
     getRecommendations(userId as string).then((movies) =>
