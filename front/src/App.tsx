@@ -8,6 +8,7 @@ import { WatchlistPage } from "./pages/WatchlistPage";
 
 import "./pages/page-styles.css";
 import { Layout } from "./components/Layout";
+import { WatchedListPage } from "./pages/WatchedListPage";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
             <WatchlistPage />
           </ProtectedRoute>
           <ProtectedRoute path="/watched-list">
-            <WatchlistPage />
+            <WatchedListPage />
           </ProtectedRoute>
           <ProtectedRoute path="/movie/:id" component={Movie} />
         </Layout>

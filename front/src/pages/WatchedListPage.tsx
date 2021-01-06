@@ -11,12 +11,11 @@ export function WatchedListPage() {
 
   useEffect(() => {
     getUserWatchedList(userId as string).then((movies) => {
-      console.log(movies);
       setWatchedList(movies);
     });
-  }, [userId]);
+  }, []);
 
   return (
-    <MoviesSection title="Watched list" movies={watchedList} watchedList />
+    <MoviesSection title="Watched list" movies={watchedList} setWatchedList={setWatchedList} watchedList />
   );
 }

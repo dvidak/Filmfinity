@@ -1,4 +1,4 @@
-import React from "react";
+import React, { SetStateAction, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import addToWatchImg from "../img/addToWatch.png";
@@ -20,6 +20,8 @@ interface Props {
   movies: Movie[] | undefined;
   watchlist?: boolean;
   watchedList?: boolean;
+  setWatchlist?: (prevState: Movie[] | undefined) => void;
+  setWatchedList?: (prevState: Movie[] | undefined) => void;
 }
 
 export function MoviesSection(props: Props) {
@@ -38,6 +40,8 @@ export function MoviesSection(props: Props) {
 
   const handleDeleteFromWatchlist = (movieId: string) => {
     deleteFromWatchlist(userId as string, movieId);
+    if (props.setWatchlist)
+      props.setWatchlist(props.movies?.filter(movie => movie.traktId !== movieId));
   };
 
   const handleAddToWatchedList = (movieId: string) => {
@@ -46,12 +50,18 @@ export function MoviesSection(props: Props) {
 
   const handleDeleteFromWatchedList = (movieId: string) => {
     deleteFromWatchedList(userId as string, movieId);
+    if (props.setWatchedList)
+      props.setWatchedList(props.movies?.filter(movie => movie.traktId !== movieId));
   };
 
   const handleRemoveToWatchedList = (movieId: string) => {
     deleteFromWatchlist(userId as string, movieId);
+    if (props.setWatchlist)
+      props.setWatchlist(props.movies?.filter(movie => movie.traktId !== movieId));
     addToWatchedList(userId as string, movieId);
   };
+
+  useEffect(() => {}, [props.movies])
 
   return (
     <div className="movies-section">

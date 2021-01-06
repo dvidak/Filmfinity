@@ -9,10 +9,9 @@ export function WatchlistPage() {
 
   useEffect(() => {
     getUserWatchlist(userId as string).then((movies) => {
-      console.log(movies);
       setWatchlist(movies);
     });
-  }, [userId]);
+  }, []);
 
-  return <MoviesSection title="Watchlist" movies={watchlist} watchlist />;
+  return <MoviesSection title="Watchlist" movies={watchlist} setWatchlist={setWatchlist} watchlist />;
 }
