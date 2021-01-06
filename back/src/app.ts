@@ -4,8 +4,9 @@ import cors from 'cors';
 import MasterRouter from './router/Master.router';
 import RecommendationService from './service/Recommendation.service';
 
-//const rec = new RecommendationService();
-//rec.generateUserRecommendations('10218727579366056');
+const rec = new RecommendationService();
+//rec.generateUserFacebookRecommendations('10219128442703578');
+//rec.generateUserRecommendations('10219128442703578');
 
 class App {
   public app: express.Application;

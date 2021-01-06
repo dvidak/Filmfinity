@@ -28,6 +28,7 @@ class RecommendationService {
     // Look at all liked movies and get recommendations for all of them
     console.log('[RecommendationService] Generating Facebook recommendations...');
     let recommendations = await this.getRecommendationsForMovieArray(user.mappedFbLikedMovies, 1.8);
+    recommendations = await this.getGenresRecommendations(recommendations);
     await User.updateOne({ facebookId: userFacebookId }, { facebookRecommendations: recommendations });
     return recommendations;
   }
@@ -68,6 +69,8 @@ class RecommendationService {
     console.log('[RecommendationService] Marking watchlist and watched movies...');
     recommendations = this.filterRecommendations(user, recommendations);
 
+    console.log("SORTED RECOMMENDATIONS ", recommendations)
+
     await User.updateOne({ facebookId: userFacebookId }, { recommendations });
   }
 
@@ -82,6 +85,10 @@ class RecommendationService {
       (rec as any).watchedList = !!watchedList;
       (rec as any).watchlist = !!watchlist;
     }
+    let sortedRecommendations: MovieInterface[] = recommendations.sort(function (a, b) {
+      return b.coeff - a.coeff
+    })  
+    recommendations = sortedRecommendations.slice(0, 20)
     return recommendations;
   }
 
