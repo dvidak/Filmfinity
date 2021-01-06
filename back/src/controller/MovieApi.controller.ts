@@ -4,16 +4,19 @@ import { AppConfig } from '../config/config';
 import MovieService from '../service/Movie.service';
 import TmdbService from '../service/Tmdb.service';
 import TraktService, { MovieType } from '../service/Trakt.service';
+import RapidApiService from '../service/RapidApi.service';
 
 class MovieApiController {
   private tmdbService: TmdbService;
   private traktService: TraktService;
   private movieService: MovieService;
+  private rapidApiService: RapidApiService;
 
   constructor() {
     this.tmdbService = new TmdbService();
     this.traktService = new TraktService();
     this.movieService = new MovieService();
+    this.rapidApiService = new RapidApiService();
     this.fetchTraktPopularMovies = this.fetchTraktPopularMovies.bind(this);
     this.fetchTraktTrendingMovies = this.fetchTraktTrendingMovies.bind(this);
     this.fetchById = this.fetchById.bind(this);
@@ -27,7 +30,8 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const movieObject = this.movieService.serializeMovieObject(traktMovie, tmdbMovie);
+      const rapiApiMovie = await this.rapidApiService.getMovieInfo(traktMovie.ids.imdb);
+      const movieObject = await this.movieService.serializeMovieObject(traktMovie, tmdbMovie, rapiApiMovie);
       movies.push(movieObject);
     }
 
@@ -40,7 +44,8 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.movie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const movieObject = this.movieService.serializeMovieObject(traktMovie.movie, tmdbMovie); // * Ne radi bez .movie (?)
+      const rapiApiMovie = await this.rapidApiService.getMovieInfo(traktMovie.movie.ids.imdb);
+      const movieObject = await this.movieService.serializeMovieObject(traktMovie.movie, tmdbMovie, rapiApiMovie); // * Ne radi bez .movie (?)
       movies.push(movieObject);
     }
     res.status(200).json(movies);
@@ -77,5 +82,6 @@ class MovieApiController {
     res.status(200).json(tmdbMovies.data.results);
   }
 }
+
 
 export = new MovieApiController();

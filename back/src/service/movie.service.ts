@@ -1,14 +1,17 @@
 import { ActorType } from '../types/Actor.type';
 import TmdbService from './Tmdb.service';
 import TraktService from './Trakt.service';
+import RapidApiService from './RapidApi.service';
 
 class MovieService {
   private tmdbService: TmdbService;
   private traktService: TraktService;
+  private rapidApiService: RapidApiService;
 
   constructor() {
     this.tmdbService = new TmdbService();
     this.traktService = new TraktService();
+    this.rapidApiService = new RapidApiService();
   }
 
   async getMovieObject(traktId: string, tmdbId: string) {
@@ -18,10 +21,13 @@ class MovieService {
     if (traktId) traktMovie = ((await this.traktService.searchTraktMovieById(traktId, 'trakt')) as any)[0];
     if (tmdbId) tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
 
-    return this.serializeMovieObject(traktMovie.movie, tmdbMovie);
+    const rapidApiMovie = await this.rapidApiService.getMovieInfo(traktMovie.movie.ids.imdb);
+    console.log("RAPIDAPI MOVIE ", rapidApiMovie);
+
+    return this.serializeMovieObject(traktMovie.movie, tmdbMovie, rapidApiMovie);
   }
 
-  public serializeMovieObject(traktMovie: any, tmdbMovie: any) {
+  public serializeMovieObject(traktMovie: any, tmdbMovie: any, rapidApiMovie: any) {
     let movieObject: any;
     let actors: ActorType[] = [];
 
@@ -59,10 +65,15 @@ class MovieService {
           : traktMovie.movie
           ? traktMovie.movie.ids.trakt
           : traktMovie.ids.trakt,
+        rating: rapidApiMovie.rating,
+        ratingVotes: rapidApiMovie.rating_votes,
+        length: rapidApiMovie.length,
+        trailerLink: rapidApiMovie.trailer.link
       };
     } else {
       movieObject = traktMovie;
     }
+    console.log("MOVIE OBJECT ", movieObject)
     return movieObject;
   }
 }
