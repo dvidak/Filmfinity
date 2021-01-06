@@ -41,7 +41,9 @@ export function MoviesSection(props: Props) {
   const handleDeleteFromWatchlist = (movieId: string) => {
     deleteFromWatchlist(userId as string, movieId);
     if (props.setWatchlist)
-      props.setWatchlist(props.movies?.filter(movie => movie.traktId !== movieId));
+      props.setWatchlist(
+        props.movies?.filter((movie) => movie.traktId !== movieId)
+      );
   };
 
   const handleAddToWatchedList = (movieId: string) => {
@@ -51,17 +53,21 @@ export function MoviesSection(props: Props) {
   const handleDeleteFromWatchedList = (movieId: string) => {
     deleteFromWatchedList(userId as string, movieId);
     if (props.setWatchedList)
-      props.setWatchedList(props.movies?.filter(movie => movie.traktId !== movieId));
+      props.setWatchedList(
+        props.movies?.filter((movie) => movie.traktId !== movieId)
+      );
   };
 
   const handleRemoveToWatchedList = (movieId: string) => {
     deleteFromWatchlist(userId as string, movieId);
     if (props.setWatchlist)
-      props.setWatchlist(props.movies?.filter(movie => movie.traktId !== movieId));
+      props.setWatchlist(
+        props.movies?.filter((movie) => movie.traktId !== movieId)
+      );
     addToWatchedList(userId as string, movieId);
   };
 
-  useEffect(() => {}, [props.movies])
+  useEffect(() => {}, [props.movies]);
 
   return (
     <div className="movies-section">
@@ -71,6 +77,7 @@ export function MoviesSection(props: Props) {
           <div className="no-movies">No movies.</div>
         ) : props.movies !== undefined && props.movies.length > 0 ? (
           props.movies.map((movie: Movie) => {
+            console.log(movie);
             return (
               <div
                 className="movie-thumbnail"
@@ -80,7 +87,9 @@ export function MoviesSection(props: Props) {
                 }}
               >
                 <div className="movie-thumbnail__details">
-                  <h4 onClick={() => routeChange(movie.traktId)}>{movie.title}</h4>
+                  <h4 onClick={() => routeChange(movie.traktId)}>
+                    {movie.title}
+                  </h4>
                   <div className="movie-thumbnail__details__buttons">
                     {props.watchlist ? (
                       <>

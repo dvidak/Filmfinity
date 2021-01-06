@@ -69,7 +69,7 @@ class RecommendationService {
     console.log('[RecommendationService] Marking watchlist and watched movies...');
     recommendations = this.filterRecommendations(user, recommendations);
 
-    console.log("SORTED RECOMMENDATIONS ", recommendations)
+    // console.log('RECOMMENDATIONS ', recommendations);
 
     await User.updateOne({ facebookId: userFacebookId }, { recommendations });
   }
@@ -79,16 +79,17 @@ class RecommendationService {
    * @param recommendations Array of recommended movies
    */
   filterRecommendations(user: UserInterface, recommendations: MovieInterface[]) {
-    for (const rec of recommendations) {
-      const watchedList = user.watchedList.findIndex((movie) => movie.title === rec.title);
-      const watchlist = user.watchedList.findIndex((movie) => movie.title === rec.title);
-      (rec as any).watchedList = !!watchedList;
-      (rec as any).watchlist = !!watchlist;
+    for (let i = 0; i < recommendations.length; i++) {
+      const watchedList = user.watchedList.findIndex((movie) => movie.title === recommendations[i].title);
+      const watchlist = user.watchedList.findIndex((movie) => movie.title === recommendations[i].title);
+      (recommendations[i] as any).isOnWatchedList = watchedList >= 0 ? true : false;
+      (recommendations[i] as any).isOnWatchlist = watchlist >= 0 ? true : false;
     }
+
     let sortedRecommendations: MovieInterface[] = recommendations.sort(function (a, b) {
-      return b.coeff - a.coeff
-    })  
-    recommendations = sortedRecommendations.slice(0, 20)
+      return b.coeff - a.coeff;
+    });
+    recommendations = sortedRecommendations.slice(0, 20);
     return recommendations;
   }
 

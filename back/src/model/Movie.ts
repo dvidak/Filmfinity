@@ -17,6 +17,8 @@ export interface MovieInterface extends Document {
   traktId: string;
   tmdbId: string;
   coeff: number;
+  isOnWatchlist?: boolean;
+  isOnWatchedList?: boolean;
 }
 
 const MovieSchema: Schema = new Schema({
@@ -35,6 +37,8 @@ const MovieSchema: Schema = new Schema({
   traktId: { type: String, required: true },
   tmdbId: { type: String, required: false },
   coeff: { type: Number, required: false },
+  isOnWatchlist: { type: Boolean, required: false },
+  isOnWatchedList: { type: Boolean, required: false },
 });
 
 const Movie = mongoose.model<MovieInterface>('Movie', MovieSchema);
