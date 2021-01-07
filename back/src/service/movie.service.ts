@@ -33,16 +33,14 @@ class MovieService {
 
     if (tmdbMovie) {
       tmdbMovie.credits.cast.forEach((crewObject: any) => {
-        // Movie cast is an array of more than 20 people, use only most popular
-        if (crewObject.popularity > 5) {
-          const actor: ActorType = {
-            id: crewObject.id,
-            name: crewObject.original_name,
-            character: crewObject.character,
-            image: crewObject.profile_path || null,
-          };
-          actors.push(actor);
-        }
+        // Movie cast is an array of more than 20 people, use only 10
+        const actor: ActorType = {
+          id: crewObject.id,
+          name: crewObject.original_name,
+          character: crewObject.character,
+          image: crewObject.profile_path || null,
+        };
+        actors.push(actor);
       });
       movieObject = {
         released: tmdbMovie.release_date || traktMovie.released,
@@ -56,7 +54,7 @@ class MovieService {
         popularity: tmdbMovie.popularity,
         poster: tmdbMovie.poster_path,
         tmdbId: tmdbMovie.id,
-        actors: actors,
+        actors: actors.slice(0, 20),
         genres: tmdbMovie.genres.map((genre: any) => genre.name),
         traktId: Array.isArray(traktMovie)
           ? traktMovie[0].movie

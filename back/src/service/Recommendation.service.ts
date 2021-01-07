@@ -201,7 +201,8 @@ class RecommendationService {
     const movieObject = (await this.movieService.getMovieObject(traktId, tmdbId)) as MovieInterface;
 
     let traktActorMovieRecomendation: MovieInterface[] = [];
-    const actorIds = movieObject.actors.map((actor) => actor.id);
+    // Use only 5 most relevent actors for movie recomendations
+    const actorIds = movieObject.actors.slice(0, 5).map((actor) => actor.id);
 
     for (let actorId of actorIds) {
       const movieCreditsObject = await this.traktService.getMovieCredits(actorId);
