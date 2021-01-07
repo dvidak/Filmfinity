@@ -28,12 +28,13 @@ class RecommendationService {
     // Look at all liked movies and get recommendations for all of them
     console.log('[RecommendationService] Generating Facebook recommendations...');
 
-    const dorotea = await User.findOne({ facebookId: '3531360170284223' });
-    if (!dorotea) return;
+    // const dorotea = await User.findOne({ facebookId: '3531360170284223' });
+    // if (!dorotea) return;
 
-    let recommendations = await this.getRecommendationsForMovieArray(dorotea.mappedFbLikedMovies, 1.8);
+    let recommendations = await this.getRecommendationsForMovieArray(user.mappedFbLikedMovies, 1.8);
+    recommendations = this.sortAndSliceRecommendations(recommendations);
+    recommendations = this.prioritizeRecommendations(recommendations);
 
-    recommendations = await this.getGenresRecommendations(recommendations);
     await User.updateOne({ facebookId: userFacebookId }, { facebookRecommendations: recommendations });
     return recommendations;
   }
@@ -72,6 +73,7 @@ class RecommendationService {
 
     // Mark watched movies and movies on watchlist
     console.log('[RecommendationService] Marking watchlist and watched movies...');
+    recommendations = this.sortAndSliceRecommendations(recommendations);
     recommendations = this.filterRecommendations(user, recommendations);
 
     // console.log('GENERAL RECOMMENDATIONS ', recommendations);
@@ -91,6 +93,10 @@ class RecommendationService {
       (recommendations[i] as any).isOnWatchlist = watchlist >= 0 ? true : false;
     }
 
+    return recommendations;
+  }
+
+  sortAndSliceRecommendations(recommendations: MovieInterface[]) {
     let sortedRecommendations: MovieInterface[] = recommendations.sort(function (a, b) {
       return b.coeff - a.coeff;
     });
@@ -140,7 +146,7 @@ class RecommendationService {
   async getRecommendationsForMovieArray(movies: MovieInterface[], coeff = 1): Promise<MovieInterface[]> {
     let finalRecommendations: MovieInterface[] = [];
     for (const movie of movies) {
-      const movieRecommendations = await this.getRecommendations(movie.title, movie.traktId, movie.tmdbId, coeff);
+      const movieRecommendations = await this.getRecommendations(movie, coeff);
       finalRecommendations = [...finalRecommendations, ...movieRecommendations];
     }
     return finalRecommendations;
@@ -152,20 +158,21 @@ class RecommendationService {
    * @param traktId Trakt ID of the movie
    * @param coeff Coefficient of importance, default 1
    */
-  async getRecommendations(
-    movieName: string,
-    traktId: string,
-    tmdbId: string,
-    coeff: number = 1
-  ): Promise<MovieInterface[]> {
-    console.log('Recommendations for ' + movieName + ' with trakt ID ' + traktId);
+  async getRecommendations(movie: MovieInterface, coeff: number = 1): Promise<MovieInterface[]> {
+    // console.log('Recommendations for ' + movie.title + ' with trakt ID ' + movie.traktId + '.');
 
     // Get raw recommendations
-    const traktRecs = (await this.traktService.getRelatedTraktMovies(traktId)) as TraktType[];
-    const tastediveRecs = (await this.tastediveService.getRecommendations(movieName)).Similar
+    const traktRecs = (await this.traktService.getRelatedTraktMovies(movie.traktId)) as TraktType[];
+    // console.log('--- got Trakt related movies...');
+    const tastediveRecs = (await this.tastediveService.getRecommendations(movie.title)).Similar
       .Results as TastediveType[];
-    const tmdbRecs = await this.tmdbService.getRecommendations(tmdbId);
-    const traktActorsRecs = await this.getRecommendationsBasedOnActors(traktId, tmdbId);
+    // console.log('--- got Tastedive movies...');
+    const tmdbRecs = await this.tmdbService.getRecommendations(movie.tmdbId);
+    // console.log('--- got TMDb recommendations...');
+    const traktActorsRecs = await this.getRecommendationsBasedOnActors(movie);
+    // console.log('--- got Trakt actor recommendations...');
+
+    // console.log('Got all information from all 3rd party APIs. Now calculating coeff and saving.');
 
     const finalRecommendations: MovieInterface[] = [];
 
@@ -206,12 +213,10 @@ class RecommendationService {
   }
 
   // From popular actors of some movie return list of actor popular movies
-  async getRecommendationsBasedOnActors(traktId: string, tmdbId: string) {
-    const movieObject = (await this.movieService.getMovieObject(traktId, tmdbId)) as MovieInterface;
-
+  async getRecommendationsBasedOnActors(movie: MovieInterface) {
     let traktActorMovieRecomendation: MovieInterface[] = [];
     // Use only 5 most relevent actors for movie recomendations
-    const actorIds = movieObject.actors.slice(0, 5).map((actor) => actor.id);
+    const actorIds = movie.actors.slice(0, 3).map((actor) => actor.id);
 
     for (let actorId of actorIds) {
       const movieCreditsObject = await this.traktService.getMovieCredits(actorId);

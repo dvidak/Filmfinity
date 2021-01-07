@@ -9,15 +9,19 @@ class TmdbService {
           `https://api.themoviedb.org/3/movie/${tmdbId}?api_key=${AppConfig.TMDB.API_KEY}&append_to_response=credits`
         ).then((movie) => movie.data);
       } catch {
-        console.log('catch and continue tmdb');
+        console.log(`TMDb movie ${tmdbId} not found.`);
       }
     }
   }
 
   public async getRecommendations(tmbdId: string) {
-    return await Axios.get(
-      `https://api.themoviedb.org/3/movie/${tmbdId}/recommendations?api_key=${AppConfig.TMDB.API_KEY}`
-    ).then((response) => response.data.results);
+    try {
+      return await Axios.get(
+        `https://api.themoviedb.org/3/movie/${tmbdId}/recommendations?api_key=${AppConfig.TMDB.API_KEY}`
+      ).then((response) => response.data.results);
+    } catch {
+      console.log(`TMDb movie ${tmbdId} recommendations not found.`);
+    }
   }
 }
 
