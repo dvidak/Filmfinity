@@ -24,25 +24,34 @@ class UsersController {
     this.getUserWatchedList = this.getUserWatchedList.bind(this);
     this.getFacebookRecommendations = this.getFacebookRecommendations.bind(this);
     this.getUserMappedFbMovies = this.getUserMappedFbMovies.bind(this);
+    this.getGenresRecommendations = this.getGenresRecommendations.bind(this);
+    this.getRecommendations = this.getRecommendations.bind(this);
   }
 
   async getFacebookRecommendations(req: Request, res: Response) {
-    await this.recommendationService.generateUserRecommendations(req.params.userId);
     User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
       if (err) {
         res.send(err);
       } else {
-        res.send(user?.facebookRecommendations);
+        if (user) {
+          let recs = user.facebookRecommendations;
+          recs = this.recommendationService.filterRecommendations(user, recs);
+          res.send(recs);
+        } else {
+          res.status(404).json({ message: 'User not found.' });
+        }
       }
     });
   }
 
   getGenresRecommendations(req: Request, res: Response) {
     User.findOne({ facebookId: req.params.userId }, (err: any, user) => {
-      if (err) {
+      if (err || !user) {
         res.send(err);
       } else {
-        res.send(user?.genresRecommendations);
+        let recs = user.genresRecommendations;
+        recs = this.recommendationService.filterRecommendations(user, recs);
+        res.send(recs);
       }
     });
   }
@@ -52,7 +61,9 @@ class UsersController {
       if (err || !user) {
         res.send(err);
       } else {
-        res.send(user.recommendations);
+        let recs = user.recommendations;
+        recs = this.recommendationService.filterRecommendations(user, recs);
+        res.send(recs);
       }
     });
   }

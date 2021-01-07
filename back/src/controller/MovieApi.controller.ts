@@ -5,17 +5,20 @@ import MovieService from '../service/Movie.service';
 import TmdbService from '../service/Tmdb.service';
 import TraktService, { MovieType } from '../service/Trakt.service';
 import RapidApiService from '../service/RapidApi.service';
+import RecommendationService from '../service/Recommendation.service';
 
 class MovieApiController {
   private tmdbService: TmdbService;
   private traktService: TraktService;
   private movieService: MovieService;
   private rapidApiService: RapidApiService;
+  private recommendationService: RecommendationService;
 
   constructor() {
     this.tmdbService = new TmdbService();
     this.traktService = new TraktService();
     this.movieService = new MovieService();
+    this.recommendationService = new RecommendationService();
     this.rapidApiService = new RapidApiService();
     this.fetchTraktPopularMovies = this.fetchTraktPopularMovies.bind(this);
     this.fetchTraktTrendingMovies = this.fetchTraktTrendingMovies.bind(this);
@@ -24,7 +27,7 @@ class MovieApiController {
     this.fetchMovieObject = this.fetchMovieObject.bind(this);
   }
 
-  public async fetchTraktPopularMovies(_: Request, res: Response) {
+  public async fetchTraktPopularMovies(req: Request, res: Response) {
     const traktMovies = await this.traktService.traktMovies(MovieType.POPULAR);
     const movies = [];
     for (const traktMovie of traktMovies) {
@@ -34,10 +37,12 @@ class MovieApiController {
       movies.push(movieObject);
     }
 
-    res.status(200).json(movies);
+    let recs = this.recommendationService.filterRecommendations((req as any).user, movies);
+
+    res.status(200).json(recs);
   }
 
-  public async fetchTraktTrendingMovies(_: Request, res: Response) {
+  public async fetchTraktTrendingMovies(req: Request, res: Response) {
     const traktMovies = await this.traktService.traktMovies(MovieType.TRENDING);
     const movies = [];
     for (const traktMovie of traktMovies) {
@@ -46,7 +51,10 @@ class MovieApiController {
       const movieObject = await this.movieService.serializeMovieObject(traktMovie.movie, tmdbMovie); // * Ne radi bez .movie (?)
       movies.push(movieObject);
     }
-    res.status(200).json(movies);
+
+    let recs = this.recommendationService.filterRecommendations((req as any).user, movies);
+
+    res.status(200).json(recs);
   }
 
   public async fetchById(req: Request, res: Response) {
@@ -64,7 +72,7 @@ class MovieApiController {
     const movie = await this.movieService.getMovieObject(req.params.id, traktMovie[0].movie.ids.imdb);
     const rapidApiMovie = await this.rapidApiService.getMovieInfo(traktMovie[0].movie.ids.imdb);
 
-    console.log("RapidApi movie ", rapidApiMovie)
+    console.log('RapidApi movie ', rapidApiMovie);
     movie.rating = rapidApiMovie.rating;
     movie.ratingVotes = rapidApiMovie.rating_votes;
     movie.length = rapidApiMovie.length;
@@ -88,6 +96,5 @@ class MovieApiController {
     res.status(200).json(tmdbMovies.data.results);
   }
 }
-
 
 export = new MovieApiController();

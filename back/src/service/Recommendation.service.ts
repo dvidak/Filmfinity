@@ -74,7 +74,7 @@ class RecommendationService {
     // Mark watched movies and movies on watchlist
     console.log('[RecommendationService] Marking watchlist and watched movies...');
     recommendations = this.sortAndSliceRecommendations(recommendations);
-    recommendations = this.filterRecommendations(user, recommendations);
+    // recommendations = this.filterRecommendations(user, recommendations); // Added to controller directly
 
     // console.log('GENERAL RECOMMENDATIONS ', recommendations);
 
