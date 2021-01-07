@@ -76,24 +76,30 @@ export function Movie({ match }: RouteComponentProps<TParams>) {
                 <span className="grey">Released:</span> 
                 &nbsp;{new Intl.DateTimeFormat('en-US').format(new Date(movie.released))}
               </p>
-              <p className="movie-details__overview p">
-                <span className="grey">Trailer:</span> 
-                &nbsp;<a target="_blank" href={movie.trailerLink}>{movie.trailerLink}</a>
-              </p>
+              {movie.trailerLink && 
+                <p className="movie-details__overview p">
+                  <span className="grey">Trailer:</span> 
+                  &nbsp;<a target="_blank" href={movie.trailerLink}>{movie.trailerLink}</a>
+                </p>
+              }
             </div>
           </div>
           <h2 className="movie-cast-title">Cast</h2>
           <div className="actor">
             {movie.actors.map((actor: any )=> {
               return (     
-                <div className="actor-details-container">
-                  <div className="actor-details">   
-                    <img className="actor-details__image" src={"https://image.tmdb.org/t/p/w185/" + actor.image} />
-                    <p>{actor.name}</p>
-                    <h5>as</h5>
-                    <p>{actor.character}</p>
-                  </div>     
-                </div>
+                <>
+                {actor.image && 
+                  <div className="actor-details-container">
+                    <div className="actor-details">   
+                      <img className="actor-details__image" src={"https://image.tmdb.org/t/p/w185/" + actor.image} />
+                      <p>{actor.name}</p>
+                      <h5>as</h5>
+                      <p>{actor.character}</p>
+                    </div>     
+                  </div>
+                }
+                </>
               )
             })}
           </div>

@@ -23,15 +23,19 @@ export function HomePage() {
   );
 
   const userId = localStorage.getItem("facebookId");
+  const userToken = localStorage.getItem("token");
 
   useEffect(() => {
-    getTrendingMovies().then((movies) => {
+    getTrendingMovies(userToken as string).then((movies) => {
       setTrendingMovies(movies);
     });
-    getPopularMovies().then((movies) => setPopularMoivies(movies));
-    getFacebookRecommendations(userId as string).then((movies) =>
-      setFbRecommendations(movies as never)     
-    );
+    getPopularMovies(userToken as string).then((movies) => setPopularMoivies(movies));
+    getFacebookRecommendations(userId as string).then((movies) => {
+      const fbRecMovies = movies.map((a: any) => ({sort: Math.random(), value: a}))
+        .sort((a: any, b: any) => a.sort - b.sort)
+        .map((a: any) => a.value).slice(0,10);
+      setFbRecommendations(fbRecMovies)     
+    });
     getRecommendations(userId as string).then((movies) =>{
        const recMovies = movies.map((a: any) => ({sort: Math.random(), value: a}))
        .sort((a: any, b: any) => a.sort - b.sort)

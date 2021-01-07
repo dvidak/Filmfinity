@@ -3,14 +3,17 @@ const headers = new Headers();
 headers.append("Accept", "application/json");
 headers.append("Content-Type", "application/json");
 
-export function getTrendingMovies() {
+export function getTrendingMovies(userToken: string) {
+  headers.append('Authorization', 'Bearer ' + userToken);
+  headers.append("token", `${userToken}`)
   return fetch("http://localhost:4000/api/movie/trending", {
     method: "GET",
     headers: headers,
   }).then((response: any) => response.json());
 }
 
-export function getPopularMovies() {
+export function getPopularMovies(userToken: string) {
+  headers.append("token", `${userToken}`)
   return fetch("http://localhost:4000/api/movie/popular", {
     method: "GET",
     headers: headers,
