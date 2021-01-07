@@ -30,8 +30,7 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const rapiApiMovie = await this.rapidApiService.getMovieInfo(traktMovie.ids.imdb);
-      const movieObject = await this.movieService.serializeMovieObject(traktMovie, tmdbMovie, rapiApiMovie);
+      const movieObject = await this.movieService.serializeMovieObject(traktMovie, tmdbMovie);
       movies.push(movieObject);
     }
 
@@ -44,8 +43,7 @@ class MovieApiController {
     for (const traktMovie of traktMovies) {
       const tmdbId = traktMovie.movie.ids.tmdb;
       let tmdbMovie = await this.tmdbService.fetchTmdbMovie(tmdbId);
-      const rapiApiMovie = await this.rapidApiService.getMovieInfo(traktMovie.movie.ids.imdb);
-      const movieObject = await this.movieService.serializeMovieObject(traktMovie.movie, tmdbMovie, rapiApiMovie); // * Ne radi bez .movie (?)
+      const movieObject = await this.movieService.serializeMovieObject(traktMovie.movie, tmdbMovie); // * Ne radi bez .movie (?)
       movies.push(movieObject);
     }
     res.status(200).json(movies);
@@ -64,6 +62,14 @@ class MovieApiController {
   public async fetchMovieObject(req: Request, res: Response) {
     const traktMovie = await this.traktService.searchTraktMovieById(req.params.id);
     const movie = await this.movieService.getMovieObject(req.params.id, traktMovie[0].movie.ids.imdb);
+    const rapidApiMovie = await this.rapidApiService.getMovieInfo(traktMovie[0].movie.ids.imdb);
+
+    console.log("RapidApi movie ", rapidApiMovie)
+    movie.rating = rapidApiMovie.rating;
+    movie.ratingVotes = rapidApiMovie.rating_votes;
+    movie.length = rapidApiMovie.length;
+    movie.trailerLink = rapidApiMovie.trailer.link;
+
     res.status(200).json(movie);
   }
 
