@@ -19,7 +19,7 @@ export function WatchedListPage() {
     <MoviesSection
       title="Watched list"
       movies={watchedList}
-      setWatchedList={setWatchedList}
+      setMovies={setWatchedList}
       watchedList
     />
   );

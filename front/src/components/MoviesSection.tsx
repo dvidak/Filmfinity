@@ -1,9 +1,6 @@
 import React, { SetStateAction, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import addToWatchImg from "../img/addToWatch.png";
-import addToWatchedImg from "../img/addToWatched.png";
-import deleteImg from "../img/delete.png";
 import { Movie } from "../models/Movie";
 import {
   addToWatchedList,
@@ -20,8 +17,7 @@ interface Props {
   movies: Movie[] | undefined;
   watchlist?: boolean;
   watchedList?: boolean;
-  setWatchlist?: (prevState: Movie[] | undefined) => void;
-  setWatchedList?: (prevState: Movie[] | undefined) => void;
+  setMovies?: (prevState: Movie[] | undefined) => void;
 }
 
 export function MoviesSection(props: Props) {
@@ -36,38 +32,48 @@ export function MoviesSection(props: Props) {
 
   const handleAddToWatchlist = (movieId: string) => {
     addToWatchlist(userId as string, movieId);
+    if (props.setMovies && props.movies) {
+      let movies = [...props.movies];
+      const movieIndex = props.movies?.findIndex(movie => movie.traktId === movieId);
+      movies[movieIndex] = {...movies[movieIndex], isOnWatchlist: true};
+      props.setMovies(movies);
+    }
   };
 
   const handleDeleteFromWatchlist = (movieId: string) => {
     deleteFromWatchlist(userId as string, movieId);
-    if (props.setWatchlist)
-      props.setWatchlist(
+    if (props.setMovies)
+      props.setMovies(
         props.movies?.filter((movie) => movie.traktId !== movieId)
       );
   };
 
   const handleAddToWatchedList = (movieId: string) => {
     addToWatchedList(userId as string, movieId);
+    if (props.setMovies && props.movies) {
+      let movies = [...props.movies];
+      const movieIndex = props.movies?.findIndex(movie => movie.traktId === movieId);
+      movies[movieIndex] = {...movies[movieIndex], isOnWatchedList: true};
+      props.setMovies(movies);
+    }
   };
 
   const handleDeleteFromWatchedList = (movieId: string) => {
     deleteFromWatchedList(userId as string, movieId);
-    if (props.setWatchedList)
-      props.setWatchedList(
+    if (props.setMovies)
+      props.setMovies(
         props.movies?.filter((movie) => movie.traktId !== movieId)
       );
   };
 
-  const handleRemoveToWatchedList = (movieId: string) => {
+  const handleMoveToWatchedList = (movieId: string) => {
     deleteFromWatchlist(userId as string, movieId);
-    if (props.setWatchlist)
-      props.setWatchlist(
+    if (props.setMovies)
+      props.setMovies(
         props.movies?.filter((movie) => movie.traktId !== movieId)
       );
     addToWatchedList(userId as string, movieId);
   };
-
-  useEffect(() => {}, [props.movies]);
 
   return (
     <div className="movies-section">
@@ -94,7 +100,8 @@ export function MoviesSection(props: Props) {
                   <div className="movie-thumbnail__details__buttons">
                     {!props.watchedList &&
                       !props.watchlist &&
-                      !movie.isOnWatchlist && (
+                      !movie.isOnWatchlist &&
+                      !movie.isOnWatchedList && (
                         <button
                           className="watchlist"
                           onClick={() => {
@@ -104,13 +111,15 @@ export function MoviesSection(props: Props) {
                         />
                       )}
                     {!props.watchedList &&
-                      !props.watchlist &&
-                      !movie.isOnWatchedList && (
+                      !movie.isOnWatchedList && 
+                      !movie.isOnWatchlist && (
                         <button
                           className="watched-list"
                           onClick={() => {
                             movie.isOnWatchedList = true;
-                            handleAddToWatchedList(`${movie.traktId}`);
+                            props.watchlist ? 
+                              handleMoveToWatchedList(`${movie.traktId}`) : 
+                              handleAddToWatchedList(`${movie.traktId}`);
                           }}
                         />
                       )}

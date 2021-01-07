@@ -81,7 +81,7 @@ class RecommendationService {
   filterRecommendations(user: UserInterface, recommendations: MovieInterface[]) {
     for (let i = 0; i < recommendations.length; i++) {
       const watchedList = user.watchedList.findIndex((movie) => movie.title === recommendations[i].title);
-      const watchlist = user.watchedList.findIndex((movie) => movie.title === recommendations[i].title);
+      const watchlist = user.watchlist.findIndex((movie) => movie.title === recommendations[i].title);
       (recommendations[i] as any).isOnWatchedList = watchedList >= 0 ? true : false;
       (recommendations[i] as any).isOnWatchlist = watchlist >= 0 ? true : false;
     }

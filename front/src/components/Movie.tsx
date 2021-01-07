@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import loader from "../img/loader.gif";
 import clockIcon from "../img/clock.png";
 import starIcon from "../img/star.png";
@@ -25,7 +25,11 @@ export function Movie({ match }: RouteComponentProps<TParams>) {
     actors: [] as any,
     genres: [] as any,
     traktId: "",
-    coeff: 0
+    coeff: 0,
+    length: "",
+    rating: 0,
+    ratingVotes: 0,
+    trailerLink: ""
   });
   
   useEffect(() => {
@@ -50,9 +54,9 @@ export function Movie({ match }: RouteComponentProps<TParams>) {
             <div className="movie-details">
               <div className="movie-details__runtime">
                 <img className="movie-details__clock" src={clockIcon}/> 
-                <span>&nbsp;{movie.runtime} min</span>
+                <span>&nbsp;{movie.length}</span>
                 <img className="movie-details__star" src={starIcon}/> 
-                <span>&nbsp;{movie.popularity}</span>
+                <span>&nbsp;{movie.rating}&nbsp;&nbsp;({movie.ratingVotes} votes)</span>
               </div>
               <div className="movie-details__genres">
                 <p className="movie-details__genre grey">Genres:</p>
@@ -71,6 +75,10 @@ export function Movie({ match }: RouteComponentProps<TParams>) {
               <p className="movie-details__overview p">
                 <span className="grey">Released:</span> 
                 &nbsp;{new Intl.DateTimeFormat('en-US').format(new Date(movie.released))}
+              </p>
+              <p className="movie-details__overview p">
+                <span className="grey">Trailer:</span> 
+                &nbsp;<a target="_blank" href={movie.trailerLink}>{movie.trailerLink}</a>
               </p>
             </div>
           </div>
