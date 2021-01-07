@@ -23,6 +23,7 @@ class UsersController {
     this.getUserWatchlist = this.getUserWatchlist.bind(this);
     this.getUserWatchedList = this.getUserWatchedList.bind(this);
     this.getFacebookRecommendations = this.getFacebookRecommendations.bind(this);
+    this.getUserMappedFbMovies = this.getUserMappedFbMovies.bind(this);
   }
 
   async getFacebookRecommendations(req: Request, res: Response) {
@@ -119,6 +120,12 @@ class UsersController {
     const userId = req.params.userId;
     const watchedList = await this.usersService.getUserWatchedList(userId);
     res.status(200).json(watchedList);
+  }
+
+  public async getUserMappedFbMovies(req: Request, res: Response) {
+    const userId = req.params.userId;
+    const fbMovies = await this.usersService.getUserFbMovies(userId);
+    res.status(200).json(fbMovies);
   }
 
   public async getUserMovies(req: Request, res: Response) {

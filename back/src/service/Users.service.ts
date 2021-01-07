@@ -114,6 +114,11 @@ class UsersService {
     return user?.watchlist;
   }
 
+  public async getUserFbMovies(facebookId: string) {
+    const user = await User.findOne({ facebookId });
+    return user?.mappedFbLikedMovies;
+  }
+
   public async addToWatchedList(userId: string, movieId: string) {
     const traktMovie = await this.traktService.searchTraktMovieById(movieId, 'trakt');
     const tmdbId = Array.isArray(traktMovie)

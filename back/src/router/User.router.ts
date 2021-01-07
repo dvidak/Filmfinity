@@ -18,6 +18,7 @@ class UserRouter {
     this._router.get('/:userId/facebook-recommendations', this.controller.getFacebookRecommendations);
     this._router.get('/:userId/genres-recommendations', this.controller.getGenresRecommendations);
     this._router.get('/:userId/recommendations', this.controller.getRecommendations);
+    this._router.get('/:userId/fbMovies', this.controller.getUserMappedFbMovies);
 
     this._router.get('/:userId/watchlist', this.controller.getUserWatchlist);
     this._router.post('/:userId/watchlist', this.controller.addToWatchlist);
