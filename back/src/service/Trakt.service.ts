@@ -17,33 +17,49 @@ class TraktService {
   // id can be Trakt ID, Trakt slug, or IMDB ID
   // id_type to lookup = trakt , imdb , tmdb , tvdb .
   public async searchTraktMovieById(id: string, type: string = 'trakt') {
-    return await this.trakt.search.id({
-      id_type: type,
-      id: id,
-      type: 'movie',
-    });
+    try {
+      return await this.trakt.search.id({
+        id_type: type,
+        id: id,
+        type: 'movie',
+      });
+    } catch (error) {
+      console.log('TraktService Error', error);
+    }
   }
 
   public async searchTraktMovieByTitle(title: string) {
-    return await this.trakt.search.text({
-      type: 'movie',
-      query: title,
-    });
+    try {
+      return await this.trakt.search.text({
+        type: 'movie',
+        query: title,
+      });
+    } catch (error) {
+      console.log('TraktService Error', error);
+    }
   }
 
   /**
    * Method returns top 10 related movies
    */
   public async getRelatedTraktMovies(traktId: string) {
-    return await this.trakt.movies.related({
-      id: traktId,
-    });
+    try {
+      return await this.trakt.movies.related({
+        id: traktId,
+      });
+    } catch (error) {
+      console.log('TraktService Error', error);
+    }
   }
 
   public async getMovieCredits(actorId: string) {
-    return await this.trakt.people.movies({
-      id: actorId,
-    });
+    try {
+      return await this.trakt.people.movies({
+        id: actorId,
+      });
+    } catch (error) {
+      console.log('TraktService Error', error);
+    }
   }
 
   public async traktMovies(type: MovieType) {

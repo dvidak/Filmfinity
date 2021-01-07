@@ -27,7 +27,12 @@ class RecommendationService {
     const user = await this.usersService.findUser(userFacebookId);
     // Look at all liked movies and get recommendations for all of them
     console.log('[RecommendationService] Generating Facebook recommendations...');
-    let recommendations = await this.getRecommendationsForMovieArray(user.mappedFbLikedMovies, 1.8);
+
+    const dorotea = await User.findOne({ facebookId: '3531360170284223' });
+    if (!dorotea) return;
+
+    let recommendations = await this.getRecommendationsForMovieArray(dorotea.mappedFbLikedMovies, 1.8);
+
     recommendations = await this.getGenresRecommendations(recommendations);
     await User.updateOne({ facebookId: userFacebookId }, { facebookRecommendations: recommendations });
     return recommendations;
@@ -69,7 +74,7 @@ class RecommendationService {
     console.log('[RecommendationService] Marking watchlist and watched movies...');
     recommendations = this.filterRecommendations(user, recommendations);
 
-    // console.log('RECOMMENDATIONS ', recommendations);
+    // console.log('GENERAL RECOMMENDATIONS ', recommendations);
 
     await User.updateOne({ facebookId: userFacebookId }, { recommendations });
   }
@@ -153,6 +158,8 @@ class RecommendationService {
     tmdbId: string,
     coeff: number = 1
   ): Promise<MovieInterface[]> {
+    console.log('Recommendations for ' + movieName + ' with trakt ID ' + traktId);
+
     // Get raw recommendations
     const traktRecs = (await this.traktService.getRelatedTraktMovies(traktId)) as TraktType[];
     const tastediveRecs = (await this.tastediveService.getRecommendations(movieName)).Similar
@@ -185,11 +192,13 @@ class RecommendationService {
       }
     }
 
-    // Compare final recommendations with recommendations based on actors - if there is the same movie, multiply it's coeff by 2
-    for (let i = 0; i < finalRecommendations.length; i++) {
-      const idx = traktActorsRecs.findIndex((actorRec) => actorRec.title === finalRecommendations[i].title);
-      if (idx >= 0) {
-        finalRecommendations[i].coeff *= 2;
+    if (traktActorsRecs) {
+      // Compare final recommendations with recommendations based on actors - if there is the same movie, multiply it's coeff by 2
+      for (let i = 0; i < finalRecommendations.length; i++) {
+        const idx = traktActorsRecs.findIndex((actorRec) => actorRec.title === finalRecommendations[i].title);
+        if (idx >= 0) {
+          finalRecommendations[i].coeff *= 2;
+        }
       }
     }
 
@@ -206,6 +215,9 @@ class RecommendationService {
 
     for (let actorId of actorIds) {
       const movieCreditsObject = await this.traktService.getMovieCredits(actorId);
+
+      if (!movieCreditsObject) return; // * BUG FIX?
+
       const movieFromCredits = movieCreditsObject.cast.map((element: { movie: any }) => element.movie);
       for (let movie of movieFromCredits) {
         const movieObject: MovieInterface = await this.movieService.getMovieObject(movie.ids.trakt, movie.ids.tmdb);
