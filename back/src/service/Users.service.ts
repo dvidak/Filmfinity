@@ -44,7 +44,7 @@ class UsersService {
 
     for (const movie of user.watchedList) if (movie.genres) genres = [...genres, ...movie.genres];
 
-    console.log('All genres', genres);
+    // console.log('All genres', genres);
 
     return genres;
   }
@@ -87,12 +87,12 @@ class UsersService {
         if (error) {
           console.log(error);
         } else {
-          console.log(success);
+          // console.log(success);
         }
       }
     );
 
-    console.log('Should add to watch list', userId, movieId);
+    console.log('Adding to watch list', userId, movieId);
   }
 
   public async removeFromWatchlist(userId: string, movieId: string) {
@@ -103,7 +103,7 @@ class UsersService {
         if (error) {
           console.log(error);
         } else {
-          console.log(success);
+          // console.log(success);
         }
       }
     );
@@ -138,7 +138,7 @@ class UsersService {
         if (error) {
           console.log(error);
         } else {
-          console.log(success);
+          // console.log(success);
         }
       }
     );
@@ -152,7 +152,7 @@ class UsersService {
         if (error) {
           console.log(error);
         } else {
-          console.log(success);
+          // console.log(success);
         }
       }
     );

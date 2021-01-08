@@ -111,3 +111,10 @@ a {
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+iframe.trailer {
+  border: 0;
+  overflow: hidden;
+  width: 650px;
+  height: 400px;
+}

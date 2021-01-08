@@ -6,6 +6,7 @@ import TmdbService from '../service/Tmdb.service';
 import TraktService, { MovieType } from '../service/Trakt.service';
 import RapidApiService from '../service/RapidApi.service';
 import RecommendationService from '../service/Recommendation.service';
+import User from '../model/User';
 
 class MovieApiController {
   private tmdbService: TmdbService;
@@ -28,6 +29,8 @@ class MovieApiController {
   }
 
   public async fetchTraktPopularMovies(req: Request, res: Response) {
+    const userId = req.params.userId;
+
     const traktMovies = await this.traktService.traktMovies(MovieType.POPULAR);
     const movies = [];
     for (const traktMovie of traktMovies) {
@@ -37,12 +40,16 @@ class MovieApiController {
       movies.push(movieObject);
     }
 
-    let recs = this.recommendationService.filterRecommendations((req as any).user, movies);
+    const user = await User.findOne({ facebookId: userId });
+    if (!user) return;
+    let recs = this.recommendationService.filterRecommendations(user, movies);
 
     res.status(200).json(recs);
   }
 
   public async fetchTraktTrendingMovies(req: Request, res: Response) {
+    const userId = req.params.userId;
+
     const traktMovies = await this.traktService.traktMovies(MovieType.TRENDING);
     const movies = [];
     for (const traktMovie of traktMovies) {
@@ -52,7 +59,9 @@ class MovieApiController {
       movies.push(movieObject);
     }
 
-    let recs = this.recommendationService.filterRecommendations((req as any).user, movies);
+    const user = await User.findOne({ facebookId: userId });
+    if (!user) return;
+    let recs = this.recommendationService.filterRecommendations(user, movies);
 
     res.status(200).json(recs);
   }
@@ -72,7 +81,7 @@ class MovieApiController {
     const movie = await this.movieService.getMovieObject(req.params.id, traktMovie[0].movie.ids.imdb);
     const rapidApiMovie = await this.rapidApiService.getMovieInfo(traktMovie[0].movie.ids.imdb);
 
-    console.log('RapidApi movie ', rapidApiMovie);
+    // console.log('RapidApi movie ', rapidApiMovie);
     movie.rating = rapidApiMovie.rating;
     movie.ratingVotes = rapidApiMovie.rating_votes;
     movie.length = rapidApiMovie.length;

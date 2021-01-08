@@ -16,8 +16,8 @@ class MovieApiRouter {
   }
 
   private configure() {
-    this._router.get('/popular', this.facebookMiddleware.auth, this.controller.fetchTraktPopularMovies);
-    this._router.get('/trending', this.facebookMiddleware.auth, this.controller.fetchTraktTrendingMovies);
+    this._router.get('/popular/:userId', this.controller.fetchTraktPopularMovies);
+    this._router.get('/trending/:userId', this.controller.fetchTraktTrendingMovies);
     this._router.get('/tmdb/trending', this.controller.fetchTmdbTrendingMovies);
     this._router.get('/tmdb/popular', this.controller.fetchTmdbPopularMovies);
     this._router.get('/:id', this.controller.fetchMovieObject);

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, RouteComponentProps } from "react-router-dom";
 import loader from "../img/loader.gif";
 import clockIcon from "../img/clock.png";
 import starIcon from "../img/star.png";
-import { getMovieObject } from '../services/movie';
+import { getMovieObject } from "../services/movie";
 
-import "./movie-details-style.css"
+import "./movie-details-style.css";
 
 type TParams = { id: string };
 
@@ -29,82 +29,100 @@ export function Movie({ match }: RouteComponentProps<TParams>) {
     length: "",
     rating: 0,
     ratingVotes: 0,
-    trailerLink: ""
+    trailerLink: "",
   });
-  
+
   useEffect(() => {
-    getMovieObject(match.params.id).then(movie => {
+    getMovieObject(match.params.id).then((movie) => {
       //movie.ids.imdb
       setMovie(movie);
-      console.log("Movie ", movie)
+      console.log("Movie ", movie);
       setIsLoading(false);
     });
   }, [match.params.id]);
 
+  const splitted = movie.trailerLink.split("/");
+  const trailerId = splitted[splitted.length - 1];
+
   return (
     <>
-      {isLoading ? 
+      {isLoading ? (
         <div className="loader">
-          <img src={loader} className="loader-gif" alt="loading"/>
-        </div> :
+          <img src={loader} className="loader-gif" alt="loading" />
+        </div>
+      ) : (
         <div className="movie">
           <h1>{movie.title}</h1>
           <div className="movie-details-container">
-            <img className="movie-poster" src={"https://image.tmdb.org/t/p/w185/" + movie.poster}/>
+            <img
+              className="movie-poster"
+              src={"https://image.tmdb.org/t/p/w185/" + movie.poster}
+            />
             <div className="movie-details">
               <div className="movie-details__runtime">
-                <img className="movie-details__clock" src={clockIcon}/> 
+                <img className="movie-details__clock" src={clockIcon} />
                 <span>&nbsp;{movie.length}</span>
-                <img className="movie-details__star" src={starIcon}/> 
-                <span>&nbsp;{movie.rating}&nbsp;&nbsp;({movie.ratingVotes} votes)</span>
+                <img className="movie-details__star" src={starIcon} />
+                <span>
+                  &nbsp;{movie.rating}&nbsp;&nbsp;({movie.ratingVotes} votes)
+                </span>
               </div>
               <div className="movie-details__genres">
                 <p className="movie-details__genre grey">Genres:</p>
                 {movie.genres.map((genre: string) => {
-                  return (
-                    <p className="movie-details__genre">
-                      {genre}
-                    </p>
-                  )
+                  return <p className="movie-details__genre">{genre}</p>;
                 })}
               </div>
               <p className="movie-details__overview p">
-                <span className="grey">Overview:</span> 
+                <span className="grey">Overview:</span>
                 &nbsp;{movie.overview}
               </p>
               <p className="movie-details__overview p">
-                <span className="grey">Released:</span> 
-                &nbsp;{new Intl.DateTimeFormat('en-US').format(new Date(movie.released))}
+                <span className="grey">Released:</span>
+                &nbsp;
+                {new Intl.DateTimeFormat("en-US").format(
+                  new Date(movie.released)
+                )}
               </p>
-              {movie.trailerLink && 
+              {movie.trailerLink && (
                 <p className="movie-details__overview p">
-                  <span className="grey">Trailer:</span> 
-                  &nbsp;<a target="_blank" href={movie.trailerLink}>{movie.trailerLink}</a>
+                  <span className="grey">Trailer:</span>
+                  &nbsp;
+                  <a target="_blank" href={movie.trailerLink}>
+                    {movie.trailerLink}
+                  </a>
                 </p>
-              }
+              )}
+              <iframe
+                className="trailer"
+                src={`https://www.imdb.com/video/imdb/${trailerId}/imdb/embed?autoplay=false&width=640`}
+              ></iframe>
             </div>
           </div>
           <h2 className="movie-cast-title">Cast</h2>
           <div className="actor">
-            {movie.actors.map((actor: any )=> {
-              return (     
+            {movie.actors.map((actor: any) => {
+              return (
                 <>
-                {actor.image && 
-                  <div className="actor-details-container">
-                    <div className="actor-details">   
-                      <img className="actor-details__image" src={"https://image.tmdb.org/t/p/w185/" + actor.image} />
-                      <p>{actor.name}</p>
-                      <h5>as</h5>
-                      <p>{actor.character}</p>
-                    </div>     
-                  </div>
-                }
+                  {actor.image && (
+                    <div className="actor-details-container">
+                      <div className="actor-details">
+                        <img
+                          className="actor-details__image"
+                          src={"https://image.tmdb.org/t/p/w185/" + actor.image}
+                        />
+                        <p>{actor.name}</p>
+                        <h5>as</h5>
+                        <p>{actor.character}</p>
+                      </div>
+                    </div>
+                  )}
                 </>
-              )
+              );
             })}
           </div>
         </div>
-      }
+      )}
     </>
-  )
+  );
 }
