@@ -4,35 +4,24 @@ import {
   getPopularMovies,
   getRecommendations,
   getTrendingMovies,
+  searchMovieByTitle,
 } from "../services/movie";
 import { MoviesSection } from "../components/MoviesSection";
 import { Movie } from "../models/Movie";
 
 export function SearchPage() {
-  const [popularMovies, setPopularMoivies] = useState<Movie[] | undefined>(
-    undefined
+  const [movies, setMovies] = useState<Movie[] | undefined>(
+    []
   );
-  const [trendingMovies, setTrendingMovies] = useState<Movie[] | undefined>(
-    undefined
-  );
-
-  const userId = localStorage.getItem("facebookId");
-  const userToken = localStorage.getItem("token");
 
   const handleSearch = (e: any) => {
     e.preventDefault();
     const query = e.target.query.value;
-    console.log("Pola, ovo je unos u polje", query);
+    setMovies(undefined);
+    searchMovieByTitle(query).then((movies) => {
+      setMovies(movies)
+    })
   };
-
-  useEffect(() => {
-    getTrendingMovies(userId as string).then((movies) => {
-      setTrendingMovies(movies);
-    });
-    getPopularMovies(userId as string).then((movies) =>
-      setPopularMoivies(movies)
-    );
-  }, [userId]);
 
   return (
     <div className="movie-list">
@@ -47,8 +36,8 @@ export function SearchPage() {
       </form>
       <MoviesSection
         title="Search results"
-        movies={trendingMovies}
-        setMovies={setTrendingMovies}
+        movies={movies}
+        setMovies={setMovies}
       />
     </div>
   );

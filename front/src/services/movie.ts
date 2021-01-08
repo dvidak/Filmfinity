@@ -90,3 +90,10 @@ export function getRecommendations(userId: string) {
     headers: headers,
   }).then((response: any) => response.json());
 }
+
+export function searchMovieByTitle(title: string) {
+  return fetch(`http://localhost:4000/api/movie/search/${title}`, {
+    method: "GET",
+    headers: headers,
+  }).then((response: any) => response.json());
+}
