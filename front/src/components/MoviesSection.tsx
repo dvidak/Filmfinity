@@ -17,6 +17,7 @@ interface Props {
   movies: Movie[] | undefined;
   watchlist?: boolean;
   watchedList?: boolean;
+  fbLiked?: boolean;
   setMovies?: (prevState: Movie[] | undefined) => void;
 }
 
@@ -84,60 +85,65 @@ export function MoviesSection(props: Props) {
         ) : props.movies !== undefined && props.movies.length > 0 ? (
           props.movies.map((movie: Movie) => {
             return (
-              <div
-                className="movie-thumbnail"
-                key={movie.title}
-                style={{
-                  backgroundImage: `url('${posterUrl + movie.poster}')`,
-                }}
-              >
-                <div className="movie-thumbnail__details">
-                  <h4 onClick={() => routeChange(movie.traktId)}>
-                    {movie.title}
-                    {movie.isOnWatchedList}
-                    {movie.isOnWatchlist}
-                  </h4>
-                  <div className="movie-thumbnail__details__buttons">
-                    {!props.watchedList &&
-                      !props.watchlist &&
-                      !movie.isOnWatchlist &&
-                      !movie.isOnWatchedList && (
+              <>
+                {movie.poster && 
+                <div
+                  className="movie-thumbnail"
+                  key={movie.title}
+                  style={{
+                    backgroundImage: `url('${posterUrl + movie.poster}')`,
+                  }}
+                >
+                  <div className="movie-thumbnail__details">
+                    <h4 onClick={() => routeChange(movie.traktId)}>
+                      {movie.title}
+                      {movie.isOnWatchedList}
+                      {movie.isOnWatchlist}
+                    </h4>
+                    <div className="movie-thumbnail__details__buttons">
+                      {!props.watchedList &&
+                        !props.watchlist &&
+                        !props.fbLiked &&
+                        !movie.isOnWatchlist &&
+                        !movie.isOnWatchedList && (
+                          <button
+                            className="watchlist"
+                            onClick={() => {
+                              movie.isOnWatchlist = true;
+                              handleAddToWatchlist(`${movie.traktId}`);
+                            }}
+                          />
+                        )}
+                      {!props.watchedList &&
+                        !props.fbLiked &&
+                        !movie.isOnWatchedList && 
+                        !movie.isOnWatchlist && (
+                          <button
+                            className="watched-list"
+                            onClick={() => {
+                              movie.isOnWatchedList = true;
+                              props.watchlist ? 
+                                handleMoveToWatchedList(`${movie.traktId}`) : 
+                                handleAddToWatchedList(`${movie.traktId}`);
+                            }}
+                          />
+                        )}
+                      {(props.watchedList || props.watchlist) && (
                         <button
-                          className="watchlist"
+                          className="delete"
                           onClick={() => {
-                            movie.isOnWatchlist = true;
-                            handleAddToWatchlist(`${movie.traktId}`);
+                            if (props.watchlist) {
+                              handleDeleteFromWatchlist(`${movie.traktId}`);
+                            } else if (props.watchedList) {
+                              handleDeleteFromWatchedList(`${movie.traktId}`);
+                            }
                           }}
                         />
                       )}
-                    {!props.watchedList &&
-                      !movie.isOnWatchedList && 
-                      !movie.isOnWatchlist && (
-                        <button
-                          className="watched-list"
-                          onClick={() => {
-                            movie.isOnWatchedList = true;
-                            props.watchlist ? 
-                              handleMoveToWatchedList(`${movie.traktId}`) : 
-                              handleAddToWatchedList(`${movie.traktId}`);
-                          }}
-                        />
-                      )}
-                    {(props.watchedList || props.watchlist) && (
-                      <button
-                        className="delete"
-                        onClick={() => {
-                          if (props.watchlist) {
-                            handleDeleteFromWatchlist(`${movie.traktId}`);
-                          } else if (props.watchedList) {
-                            handleDeleteFromWatchedList(`${movie.traktId}`);
-                          }
-                        }}
-                      />
-                    )}
+                    </div>
                   </div>
-                </div>
-              </div>
+                </div>}
+              </>
             );
           })
         ) : (

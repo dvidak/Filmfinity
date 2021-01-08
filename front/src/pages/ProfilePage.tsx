@@ -27,6 +27,7 @@ export function ProfilePage() {
             <MoviesSection
               title="Movies you liked on Facebook"
               movies={fbLikedMovies}
+              fbLiked
             ></MoviesSection>
           </div>
         </>

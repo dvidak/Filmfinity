@@ -9,7 +9,7 @@ import "./movie-details-style.css";
 
 type TParams = { id: string };
 
-export function Movie({ match }: RouteComponentProps<TParams>) {
+export function MoviePage({ match }: RouteComponentProps<TParams>) {
   const [isLoading, setIsLoading] = useState(true);
   const [movie, setMovie] = useState({
     released: "",
@@ -84,21 +84,18 @@ export function Movie({ match }: RouteComponentProps<TParams>) {
                   new Date(movie.released)
                 )}
               </p>
-              {movie.trailerLink && (
-                <p className="movie-details__overview p">
-                  <span className="grey">Trailer:</span>
-                  &nbsp;
-                  <a target="_blank" href={movie.trailerLink}>
-                    {movie.trailerLink}
-                  </a>
-                </p>
-              )}
-              <iframe
-                className="trailer"
-                src={`https://www.imdb.com/video/imdb/${trailerId}/imdb/embed?autoplay=false&width=640`}
-              ></iframe>
             </div>
           </div>
+          {movie.trailerLink &&
+            <>
+              <div className="movie-trailer">
+                <iframe
+                  className="trailer"
+                  src={`https://www.imdb.com/video/imdb/${trailerId}/imdb/embed?autoplay=false&width=640`}
+                ></iframe>
+              </div>
+            </>
+          }
           <h2 className="movie-cast-title">Cast</h2>
           <div className="actor">
             {movie.actors.map((actor: any) => {

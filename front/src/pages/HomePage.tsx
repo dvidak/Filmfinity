@@ -37,7 +37,7 @@ export function HomePage() {
         .map((a: any) => ({ sort: Math.random(), value: a }))
         .sort((a: any, b: any) => a.sort - b.sort)
         .map((a: any) => a.value)
-        .slice(0, 10);
+        .slice(0, 12);
       setFbRecommendations(fbRecMovies);
     });
     getRecommendations(userId as string).then((movies) => {
@@ -45,7 +45,7 @@ export function HomePage() {
         .map((a: any) => ({ sort: Math.random(), value: a }))
         .sort((a: any, b: any) => a.sort - b.sort)
         .map((a: any) => a.value)
-        .slice(0, 10);
+        .slice(0, 12);
       setRecommendations(recMovies);
     });
   }, [userId]);
