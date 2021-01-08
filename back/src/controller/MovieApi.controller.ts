@@ -26,6 +26,7 @@ class MovieApiController {
     this.fetchById = this.fetchById.bind(this);
     this.fetchByTitle = this.fetchByTitle.bind(this);
     this.fetchMovieObject = this.fetchMovieObject.bind(this);
+    this.searchMovieByTitle = this.searchMovieByTitle.bind(this);
   }
 
   public async fetchTraktPopularMovies(req: Request, res: Response) {
@@ -74,6 +75,16 @@ class MovieApiController {
   public async fetchByTitle(req: Request, res: Response) {
     const movies = await this.traktService.searchTraktMovieByTitle(req.params.title);
     res.status(200).json(movies);
+  }
+
+  public async searchMovieByTitle(req: Request, res: Response) {
+    const movies = await this.traktService.searchTraktMovieByTitle(req.params.title);
+    let movieObjects = [];
+    for (const movie of movies) {
+      const movieObject = await this.movieService.getMovieObject(movie.movie.ids.trakt, movie.movie.ids.tmdb)
+      movieObjects.push(movieObject)
+    }
+    res.status(200).json(movieObjects);
   }
 
   public async fetchMovieObject(req: Request, res: Response) {
