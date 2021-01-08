@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import movies from "../img/movies.png";
 import watchedList from "../img/watchedList.png";
 import watchlist from "../img/watchlist.png";
+import search from "../img/search.png";
+import home from "../img/home.png";
 import user from "../img/user.png";
 
 export function Navbar() {
@@ -11,6 +13,10 @@ export function Navbar() {
   return (
     <div className="nav">
       <NavLink to="/">
+        <img src={home} alt="For You" />
+        <div className="nav-label">For You</div>
+      </NavLink>
+      <NavLink to="/movies">
         <img src={movies} alt="Movies" />
         <div className="nav-label">Movies</div>
       </NavLink>
@@ -20,7 +26,11 @@ export function Navbar() {
       </NavLink>
       <NavLink to="/watched-list">
         <img src={watchedList} alt="Watched list" />
-        <div className="nav-label">Watched</div>
+        <div className="nav-label">Watched Movies</div>
+      </NavLink>
+      <NavLink to="/search">
+        <img src={search} alt="Watched list" />
+        <div className="nav-label">Search</div>
       </NavLink>
       <NavLink to="/profile">
         <img

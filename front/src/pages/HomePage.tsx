@@ -9,12 +9,6 @@ import { MoviesSection } from "../components/MoviesSection";
 import { Movie } from "../models/Movie";
 
 export function HomePage() {
-  const [popularMovies, setPopularMoivies] = useState<Movie[] | undefined>(
-    undefined
-  );
-  const [trendingMovies, setTrendingMovies] = useState<Movie[] | undefined>(
-    undefined
-  );
   const [fbRecommendations, setFbRecommendations] = useState<
     Movie[] | undefined
   >(undefined);
@@ -26,12 +20,6 @@ export function HomePage() {
   const userToken = localStorage.getItem("token");
 
   useEffect(() => {
-    getTrendingMovies(userId as string).then((movies) => {
-      setTrendingMovies(movies);
-    });
-    getPopularMovies(userId as string).then((movies) =>
-      setPopularMoivies(movies)
-    );
     getFacebookRecommendations(userId as string).then((movies) => {
       const fbRecMovies = movies
         .map((a: any) => ({ sort: Math.random(), value: a }))
@@ -61,16 +49,6 @@ export function HomePage() {
         title="Based on Facebook"
         movies={fbRecommendations}
         setMovies={setFbRecommendations}
-      />
-      <MoviesSection
-        title="Trending movies"
-        movies={trendingMovies}
-        setMovies={setTrendingMovies}
-      />
-      <MoviesSection
-        title="Popular movies"
-        movies={popularMovies}
-        setMovies={setPopularMoivies}
       />
     </div>
   );
